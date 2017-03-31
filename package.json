@@ -1,6 +1,6 @@
 {
   "name": "react-featureflow-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React helpers for featureflow-client",
   "main": "dist/react.featureflow.js",
   "scripts": {

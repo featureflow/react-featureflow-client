@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Children from 'react-children-utilities';
 import { featureflowClientShape } from './PropTypes';
 import Variant from './Variant';
@@ -8,7 +8,7 @@ import Variant from './Variant';
 import warning from './warning';
 
 
-export default class Evaluate extends React.Component{
+export default class Evaluate extends Component{
   _handleUpdated;
   evaluated;
   value;
@@ -37,7 +37,6 @@ export default class Evaluate extends React.Component{
       this.context.client.off('UPDATED_FEATURE', this._handleUpdated);
     }
   }
-
 
   handleUpdated(features){
     if (features[this.props.feature] !== this.value){

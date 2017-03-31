@@ -1,8 +1,8 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import { featureflowClientShape } from './PropTypes';
 
-export default class FeatureflowProvider extends React.Component{
+export default class FeatureflowProvider extends Component{
   getChildContext() {
     return { client: this.client}
   }
