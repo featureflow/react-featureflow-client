@@ -60,6 +60,9 @@
     "featureflow",
     "featureflow-client"
   ],
+  "files": [
+    "dist"
+  ],
   "author": "Henry Young <henry.r.t.young@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
