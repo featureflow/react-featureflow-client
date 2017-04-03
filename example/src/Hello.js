@@ -1,21 +1,28 @@
 import React from 'react'
-import { Evaluate, Variant, withClient } from '../../src/';
+import { withFeatureflow } from '../../src/';
 
 function Hello (props) {
-  console.log(props);
+
+  const feature = props.feature || 'hello';
+
   return (
     <div>
       <h1>Hello from React</h1>
-      <Evaluate feature={props.feature || 'hello'}>
-        <Variant is="on">
-          <p>I should be seen</p>
-        </Variant>
-        <Variant is="off">
-          <p>I should not be seen</p>
-        </Variant>
-      </Evaluate>
+      <b>{feature}</b>
+      {props.featureflow.evaluate(feature).isOn() && [
+        <p key="1">I should be seen</p>,
+        <p key="2">yesington</p>
+      ]}
+      {props.featureflow.evaluate(feature).isOff() && [
+        <p key="1">I should not be seen</p>,
+        <p key="2">nooo</p>
+      ]}
     </div>
   )
 }
 
-export default withClient()(Hello);
+function mapPropsToFeature(props){
+  return [props.feature || 'hello']
+}
+
+export default withFeatureflow(mapPropsToFeature)(Hello);

@@ -1,9 +1,7 @@
 import FeatureflowProvider from './FeatureflowProvider';
-import Evaluate from './Evaluate';
-import Variant from './Variant';
-import withClient from './withClient';
+import withFeatureflow from './withFeatureflow';
 
-export { FeatureflowProvider, Evaluate, Variant, withClient }
+export { FeatureflowProvider, withFeatureflow }
 
 if(window.VERSION !== undefined) {
   module.exports.version = window.VERSION;
