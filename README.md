@@ -92,7 +92,7 @@ Pass the featureflow client to a React Component's props.
 | `Component` | `Component` | **`Required`** | The component to pass the featureflow client to.  |
 
 ```javascript
-import { withClient } from 'react-featureflow-client';
+import { withFeatureflow } from 'react-featureflow-client';
 
 class MyComponent extends React.Component{
   onClickHandler(){
