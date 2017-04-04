@@ -51,8 +51,20 @@ export default function(mapFeatureListeners: ?()=>string[] = ()=>[], ClientName:
         }
       }
 
+      evaluate(feature: string){
+        const is = (value)=>value === this.state[feature];
+        return {
+          is,
+          isOn: is.bind(this, 'on'),
+          isOff: is.bind(this, 'off')
+        }
+      }
+
       render(){
-        return React.createElement(WrappedComponent, {[ClientName]: this.context.client, ...this.props});
+        return React.createElement(WrappedComponent, {[ClientName]: {
+          updateContext: this.context.client.updateContext,
+          evaluate: this.evaluate.bind(this)
+        }, ...this.props});
       }
     }
 
