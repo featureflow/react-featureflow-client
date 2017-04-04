@@ -51,18 +51,20 @@ export default function(mapFeatureListeners: ?()=>string[] = ()=>[], ClientName:
         }
       }
 
+      //Using custom evaluate to not send events every render
       evaluate(feature: string){
         const is = (value)=>value === this.state[feature];
         return {
           is,
           isOn: is.bind(this, 'on'),
-          isOff: is.bind(this, 'off')
+          isOff: is.bind(this, 'off'),
+          value: ()=>this.state[feature]
         }
       }
 
       render(){
         return React.createElement(WrappedComponent, {[ClientName]: {
-          updateContext: this.context.client.updateContext,
+          ...this.context.client,
           evaluate: this.evaluate.bind(this)
         }, ...this.props});
       }
