@@ -2,7 +2,10 @@
 import { PropTypes } from 'react'
 
 export const featureflowClientShape = PropTypes.shape({
-  evaluate: PropTypes.func.isRequired,
-  on: PropTypes.func.isRequired,
-  off: PropTypes.func.isRequired
+  evaluate: PropTypes.func.isRequired
+});
+
+export const featureflowConfigShape = PropTypes.shape({
+  update: PropTypes.bool.isRequired,
+  clientName: PropTypes.string.isRequired
 });

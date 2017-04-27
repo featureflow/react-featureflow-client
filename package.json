@@ -1,6 +1,6 @@
 {
   "name": "react-featureflow-client",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React helpers for featureflow-client",
   "main": "dist/react.featureflow.js",
   "scripts": {
@@ -74,6 +74,6 @@
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0-0 || ^16.0.0-0",
-    "featureflow-client": "^0.4.0"
+    "featureflow-client": "^0.6.0"
   }
 }

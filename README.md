@@ -35,17 +35,17 @@ ReactDOM.render(
 ```javascript
 import { withFeatureflow } from 'react-featureflow-client';
 const MyComponent = function(props){
-  const evaluated = props.featureflow.evaluate("my-feature-key");
+  const { evaluate } = props.featureflow;
   return (
     <div>
       <h1>New Feature</h1>
-      {evaluate.isOn() && (
+      {evaluate("my-feature-key").isOn() && (
         <div>
           <h2>I will be seen when the feature is on</h2>
           <p>And this is some extra text</p>
         </div>
       )}
-      {evaluate.isOff() && (
+      {evaluate("my-feature-key").isOff() && (
         <div>
           <h2>This should not be seen if the feature is on</h2>
         </div>
@@ -59,12 +59,27 @@ export default withFeatureflow()(MyComponent)
 3. That's it. 
 
 4. If you want to update your component when the evaluated feature changes in realtime, 
-pass the following function to `withFeatureflow`
+pass the following object to `withFeatureflow`
 ```javascript
-function mapFeatureListeners(props){
-  return ['my-feature-key']
+const featureflowConfig = {
+  update: true
 }
-export default withFeatureflow(mapFeatureListeners)(MyComponent)
+export default withFeatureflow(featureflowConfig)(MyComponent);
+```
+
+or for every component in the `FeatureflowProvider`
+
+```javascript
+const featureflowConfig = {
+  update: true
+}
+
+ReactDOM.render(
+  <FeatureflowProvider client={featureflow} config={featureflowConfig}>
+    <App />
+  </FeatureflowProvider>,
+  document.getElementById('app')
+);
 ```
 
 ### API
@@ -87,22 +102,29 @@ Pass the featureflow client to a React Component's props.
 
 | Params | Type | Default | Description |
 |---------------|----------|--------------|----------------------------------------------------------------|
-| `mapFeatureListeners` | `function(props)` | `()=>[]` | Use this function to bind feature listeners to update the component in realtime. If the evaluated variant of this value changes then `Component` will be rerendered. Props are passed down as a convenience. |
-| `clientProp` | `string` | `'featureflow'` | The prop to bind the featureflow client to. |
+| `featureflowConfig` | `object` | `{}` | Use to set the `update` property and featureflow `clientName` specifically for the component. See `FeatureflowConfig`. |
 | `Component` | `Component` | **`Required`** | The component to pass the featureflow client to.  |
+
+
+#### `FeatureflowConfig`
+| Properties | Type | Default | Description |
+|---------------|----------|--------------|----------------------------------------------------------------|
+| `update` | `boolean` | `false` | If set to `true` then when features update from featureflow, the component will update automatically.  |
+| `clientName` | `string` | `"featureflow"` | If you want to change the name of the featureflow client .  |
+
 
 ```javascript
 import { withFeatureflow } from 'react-featureflow-client';
 
 class MyComponent extends React.Component{
   onClickHandler(){
-    this.props.featureflow.updateContext(/*...*/);
+    this.props.customFeatureflow.updateContext(/*...*/);
   }
   //...
   render(){
     return (
       <div>
-        {this.props.featureflow.evaluate('example-feature').isOn() && 
+        {this.props.customFeatureflow.evaluate('example-feature').isOn() && 
           <p>
             This text will be shown if "example-feature" is "on". 
             It will be updated in realtime if "example-feature" changes it's value.
@@ -113,11 +135,7 @@ class MyComponent extends React.Component{
   }
 }
 
-function mapFeatureListeners(props){
-  return ["example-feature"];
-}
-
-export default withFeatureflow(mapFeatureListeners)(MyComponent);
+export default withFeatureflow({update: true, clientName: 'customFeatureflow'})(MyComponent);
 ```
 
 ## License

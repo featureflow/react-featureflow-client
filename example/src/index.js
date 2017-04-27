@@ -14,8 +14,7 @@ const featureflow = Featureflow.init(FF_KEY);
 render((
   <FeatureflowProvider client={featureflow}>
     <div>
-      <Hello />
-      <Hello feature="node-demo-feature"/>
+      <Hello feature="testing-twice"/>
     </div>
   </FeatureflowProvider>
 ), document.querySelector('#app'));

@@ -1,15 +1,25 @@
-// @flow
 import React, { Component } from 'react';
-import { featureflowClientShape } from './PropTypes';
+import { featureflowClientShape, featureflowConfigShape } from './PropTypes';
+
+
+const defaultFeatureflowConfig = {
+  update: false,
+  clientName: 'featureflow'
+};
+
 
 export default class FeatureflowProvider extends Component{
   getChildContext() {
-    return { client: this.client}
+    return { featureflowClient: this.client, featureflowConfig: this.config}
   }
 
   constructor(props, context) {
     super(props, context);
     this.client = props.client;
+    this.config = {
+      ...defaultFeatureflowConfig,
+      ...props.config
+    };
   }
 
   render() {
@@ -18,5 +28,6 @@ export default class FeatureflowProvider extends Component{
 }
 
 FeatureflowProvider.childContextTypes = {
-  client: featureflowClientShape.isRequired
+  featureflowClient: featureflowClientShape.isRequired,
+  featureflowConfig: featureflowConfigShape.isRequired
 };
