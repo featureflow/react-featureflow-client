@@ -110,7 +110,7 @@ Pass the featureflow client to a React Component's props.
 | Properties | Type | Default | Description |
 |---------------|----------|--------------|----------------------------------------------------------------|
 | `update` | `boolean` | `false` | If set to `true` then when features update from featureflow, the component will update automatically.  |
-| `clientName` | `string` | `"featureflow"` | If you want to change the name of the featureflow client .  |
+| `clientName` | `string` | `"featureflow"` | Use this to change the prop that the featureflow client will bind to.  |
 
 
 ```javascript
