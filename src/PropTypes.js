@@ -2,7 +2,8 @@
 import { PropTypes } from 'react'
 
 export const featureflowClientShape = PropTypes.shape({
-  evaluate: PropTypes.func.isRequired
+  evaluate: PropTypes.func.isRequired,
+  hasReceivedInitialResponse: PropTypes.func.isRequired
 });
 
 export const featureflowConfigShape = PropTypes.shape({

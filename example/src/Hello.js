@@ -37,4 +37,4 @@ class Hello extends React.Component{
   }
 }
 
-export default withFeatureflow({update: true})(Hello);
+export default withFeatureflow({update: true, waitForInit: true})(Hello);

@@ -5,7 +5,9 @@ import { featureflowClientShape, featureflowConfigShape } from './PropTypes';
 
 type FeatureflowConfig = {
   update?: boolean,
-  clientName?: string
+  clientName?: string,
+  waitForInit?: boolean,
+  preInitComponent?: React.Element<any>
 }
 
 export default function(featureflowConfig: ? FeatureflowConfig = {}){
@@ -46,7 +48,7 @@ export default function(featureflowConfig: ? FeatureflowConfig = {}){
 
       handleUpdated(){
         this.evaluated = {};
-        this.setState(this.context.featureflowClient.getFeatures())
+        this.setState(this.context.featureflowClient.getFeatures());
       }
 
       //Caching evaluate to not send events every render
@@ -58,6 +60,10 @@ export default function(featureflowConfig: ? FeatureflowConfig = {}){
       }
 
       render(){
+
+        if (this.config.waitForInit && !this.context.featureflowClient.hasReceivedInitialResponse()){
+          return this.config.preInitComponent || <div></div>
+        }
         return React.createElement(WrappedComponent, {[this.config.clientName]: {
           ...this.context.featureflowClient,
           evaluate: this.evaluate.bind(this)

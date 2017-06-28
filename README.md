@@ -82,6 +82,20 @@ ReactDOM.render(
 );
 ```
 
+5. If you want your component to wait until featureflow has received an initial response, set `config.waitForInit = true`
+in the featureflowConfig. If you want to render a different component while waiting on a 
+response from featureflow, you can pass in `config.preInitComponent = <YourComponent/>`. 
+This is especially useful if you may have a race condition with your application on initial load of features.
+
+```javascript
+const featureflowConfig = {
+  waitForInit: true,
+  preInitComponent: <YourComponent/>
+}
+
+export default withFeatureflow(featureflowConfig)(MyComponent);
+```
+
 ### API
 `react-featureflow-client` exposes 2 properties.
 ```javascript
@@ -111,6 +125,8 @@ Pass the featureflow client to a React Component's props.
 |---------------|----------|--------------|----------------------------------------------------------------|
 | `update` | `boolean` | `false` | If set to `true` then when features update from featureflow, the component will update automatically.  |
 | `clientName` | `string` | `"featureflow"` | Use this to change the prop that the featureflow client will bind to.  |
+| `waitForInit` | `boolean` | `false` | Use this to wait for featureflow to respond with features before the rendering the component   |
+| `preInitComponent` | `ReactComponent` | `undefined` | Use this display another component when the featureflow rules haven't loaded and `waitForInit` is `true`  |
 
 
 ```javascript
