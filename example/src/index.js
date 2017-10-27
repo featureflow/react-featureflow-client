@@ -6,10 +6,26 @@ import { FeatureflowProvider } from '../../src';
 import Featureflow from '../../../featureflow-javascript-sdk/src';
 
 
-const FF_KEY = 'env-d3ade4e76094487aa754247e18069d7f';
+const FF_KEY = 'js-env-2bf643c830d5403a9936292136e06d10';
 
 
-const featureflow = Featureflow.init(FF_KEY);
+//let featureflow = Featureflow.init(constants.FF_API_KEY);
+var context = {
+    key: 'user1',
+    values: {
+        tier: 'gold',
+        country: 'australia'
+    }
+};
+var config = {
+    streaming: true,
+    baseUrl: 'http://app.featureflow.dev',
+    rtmUrl: 'http://rtm.featureflow.dev'
+};
+//let featureflow = Featureflow.init(constants.FF_API_KEY, context, config);
+
+const featureflow = Featureflow.init(FF_KEY, context, config);
+
 
 render((
   <FeatureflowProvider client={featureflow}>

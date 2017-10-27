@@ -20,6 +20,7 @@ class Hello extends React.Component{
   render() {
     let props = this.props;
     const feature = props.feature || 'hello';
+    props.featureflow.goal('purchase-complete');
     return (
       <div>
         <h1>Hello from React</h1>

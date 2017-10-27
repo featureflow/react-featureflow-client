@@ -58,7 +58,9 @@ export default function(featureflowConfig: ? FeatureflowConfig = {}){
         }
         return this.evaluated[feature];
       }
-
+      goal(goalKey: string){
+        return this.context.featureflowClient.goal(goalKey);
+      }
       render(){
 
         if (this.config.waitForInit && !this.context.featureflowClient.hasReceivedInitialResponse()){
@@ -66,7 +68,8 @@ export default function(featureflowConfig: ? FeatureflowConfig = {}){
         }
         return React.createElement(WrappedComponent, {[this.config.clientName]: {
           ...this.context.featureflowClient,
-          evaluate: this.evaluate.bind(this)
+          evaluate: this.evaluate.bind(this),
+          goal: this.goal.bind(this),
         }, ...this.props});
       }
     }
