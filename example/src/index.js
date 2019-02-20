@@ -1,26 +1,15 @@
-import React from 'react'
-import {render} from 'react-dom'
-import Hello from './Hello'
-import HelloSingleEval from './HelloSingleEval'
+import React from 'react';
+import {render} from 'react-dom';
+import HelloReact from './HelloReact';
 import {FeatureflowProvider} from '../../src';
-
 import Featureflow from '../../../featureflow-javascript-sdk/src';
 
-
-const FF_KEY = 'js-env-299d60d027ab49b99022e804eaf9b5b0';
-
-
-const featureflow = Featureflow.init(FF_KEY);
-
-function activateLasers() {
-    reacte.render();
-}
+const featureflow = Featureflow.init('js-env-bbb659960a3344c5a31681282c0c4bdf');
 
 render((
-    <FeatureflowProvider client={featureflow}>
-        <div>
-            <Hello />
-            <HelloSingleEval />
-        </div>
-    </FeatureflowProvider>
+  <FeatureflowProvider client={featureflow}>
+    <div>
+      <HelloReact />
+    </div>
+  </FeatureflowProvider>
 ), document.querySelector('#app'));
