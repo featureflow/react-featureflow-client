@@ -6,15 +6,28 @@ import { FeatureflowProvider } from '../../src';
 import Featureflow from '../../../featureflow-javascript-sdk/src';
 
 
-const FF_KEY = 'env-d3ade4e76094487aa754247e18069d7f';
+const FF_KEY = 'sdk-js-env-yourkeyhere';
+var user = {
+    attributes:{
+        tier: 'gold',
+        country: 'australia',
+        roles: ['role1', 'role2']
+    }
+};
 
 
-const featureflow = Featureflow.init(FF_KEY);
+const featureflow = Featureflow.init(FF_KEY, user, {
+    offline: false,
+    streaming: true,
+    defaultFeatures: {
+        'example-feature': 'off'
+    },
+});
 
 render((
   <FeatureflowProvider client={featureflow}>
     <div>
-      <Hello feature="testing-twice"/>
+      <Hello feature="example-feature"/>
     </div>
   </FeatureflowProvider>
 ), document.querySelector('#app'));

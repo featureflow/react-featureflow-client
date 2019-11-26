@@ -14,6 +14,15 @@ Using NPM
 ```bash
 $ npm install --save react-featureflow-client
 ```
+## Example
+There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
+ 
+```const FF_KEY = 'sdk-js-env-yourkeyhere';```
+
+And 
+```java
+npm run example
+```
 
 ## Getting Started
 1. Wrap `<FeatureflowProvider client={featureflow}>` (with an initialised `featureflow` client) around the root of your application.

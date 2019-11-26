@@ -22,15 +22,13 @@ class Hello extends React.Component{
     const feature = props.feature || 'hello';
     return (
       <div>
-        <h1>Hello from React</h1>
+        <h1>A very simple example</h1>
         <b>{feature}</b>
         {props.featureflow.evaluate(feature).isOn() && [
-          <p key="1">I should be seen</p>,
-          <p key="2">yesington</p>
+          <p key="1">I am on</p>,
         ]}
         {props.featureflow.evaluate(feature).isOff() && [
-          <p key="1">I should not be seen</p>,
-          <p key="2">nooo</p>
+          <p key="1">I am off</p>,
         ]}
       </div>
     )
