@@ -25,7 +25,7 @@
     "chai": "3.5.0",
     "css-loader": "^0.26.1",
     "file-loader": "^0.10.0",
-    "flow-bin": "^0.39.0",
+    "flow-bin": "^0.139.0",
     "gzip-size": "3.0.0",
     "html-webpack-plugin": "^2.28.0",
     "in-publish": "2.0.0",
@@ -34,13 +34,10 @@
     "karma-chrome-launcher": "1.0.1",
     "karma-mocha": "1.0.1",
     "karma-mocha-reporter": "2.0.4",
-    "karma-phantomjs-launcher": "0.2.1",
-    "karma-phantomjs-shim": "1.1.2",
     "karma-sinon": "1.0.5",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "2.0.2",
     "mocha": "2.5.3",
-    "phantomjs": "1.9.18",
     "pretty-bytes": "3.0.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
@@ -49,7 +46,7 @@
     "sinon": "1.17.4",
     "style-loader": "^0.13.1",
     "webpack": "2.2.1",
-    "webpack-dev-server": "^2.3.0"
+    "webpack-dev-server": "^2.11.5"
   },
   "repository": {
     "type": "git",
