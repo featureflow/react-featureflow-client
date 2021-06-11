@@ -12,7 +12,9 @@ Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
 Using NPM
 ```bash
+$ npm install --save featureflow-client
 $ npm install --save react-featureflow-client
+
 ```
 ## Example
 There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
@@ -29,7 +31,7 @@ npm run example
 ```javascript
 //...
 import Featureflow from 'featureflow-client';
-import { FeatureflowProvider } from 'react-featureflow';
+import { FeatureflowProvider } from 'react-featureflow-client';
 //...
 const featureflow = Featureflow.init(API_KEY);
 //...
