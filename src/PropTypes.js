@@ -1,5 +1,5 @@
 // @flow
-import { PropTypes } from 'react'
+import PropTypes from 'prop-types'
 
 export const featureflowClientShape = PropTypes.shape({
   evaluate: PropTypes.func.isRequired,
