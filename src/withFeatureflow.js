@@ -1,6 +1,6 @@
 //
-import React, { Component, PropTypes } from 'react';
-import { featureflowClientShape, featureflowConfigShape } from './PropTypes';
+import React, { Component } from 'react';
+import {Consumer} from "./context";
 
 
 type FeatureflowConfig = {
@@ -11,15 +11,34 @@ type FeatureflowConfig = {
 }
 
 export default function(featureflowConfig: ? FeatureflowConfig = {}){
-  
-  return (WrappedComponent)=>{
-    class WithFeatureflowClient extends Component{
+  return ( WrappedComponent ) => {
+
+    return (props) => (
+        <Consumer>
+          {({ featureflow, config }) => {
+            const combinedConfig = {
+              ...config,
+              ...featureflowConfig
+            }
+            return <WrappedComponent
+                {...{[combinedConfig.clientName]: featureflow}}
+                evaluate
+                goal
+                {...props}
+               />
+          }}
+        </Consumer>
+    )
+    /*class WithFeatureflowClient extends Component{
       _handleUpdated;
       state;
       evaluated: {};
       config;
 
       constructor(props, context){
+        debugger;
+        
+
         super(props, context);
 
         this.config = {
@@ -79,6 +98,6 @@ export default function(featureflowConfig: ? FeatureflowConfig = {}){
       featureflowConfig: featureflowConfigShape.isRequired
       
     };
-    return WithFeatureflowClient;
+    return WithFeatureflowClient;*/
   }
 }
