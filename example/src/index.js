@@ -6,7 +6,7 @@ import { FeatureflowProvider } from '../../src';
 import Featureflow from '../../../featureflow-javascript-sdk/src';
 
 
-const FF_KEY = 'js-env-bbb659960a3344c5a31681282c0c4bdf';
+const FF_KEY = 'sdk-js-env-yourkeyhere';
 var user = {
     attributes:{
         tier: 'gold',
