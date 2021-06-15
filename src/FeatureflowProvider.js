@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Provider} from "./context";
-import { object, string, bool } from 'prop-types'
+import { object, string, bool, node } from 'prop-types'
 
 const defaultFeatureflowConfig = {
     update: false,
@@ -41,7 +41,10 @@ FeatureflowProvider.propTypes = {
     client: object.isRequired,
     config: object,
     update: bool,
-    clientName: string
+    clientName: string,
+    children: node.isRequired,
+
+
 }
 
 export default FeatureflowProvider;
