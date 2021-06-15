@@ -2,15 +2,7 @@
 import React from 'react';
 import { Consumer } from "./context";
 
-
-type FeatureflowConfig = {
-    update?: boolean,
-    clientName?: string,
-    waitForInit?: boolean,
-    preInitComponent?: React.Element<any>
-}
-
-export default function (featureflowConfig: ? FeatureflowConfig = {}) {
+export default function (featureflowConfig) {
     return (WrappedComponent) => {
 
         return (props) => (

@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const packageJSON = require('./package.json');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const version = packageJSON.version;
 
@@ -26,6 +27,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new ESLintPlugin(),
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(version)
     }),
