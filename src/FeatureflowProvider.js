@@ -1,45 +1,39 @@
-import React, { Component } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Provider} from "./context";
 
 const defaultFeatureflowConfig = {
-  update: false,
-  clientName: 'featureflow'
+    update: false,
+    clientName: 'featureflow'
 };
 
-export default class FeatureflowProvider extends Component{
-  constructor(props, context) {
-    super(props, context);
-    this.config = {
-      ...defaultFeatureflowConfig,
-      ...props.config
+const FeatureflowProvider = (props) => {
+    const config = {
+        ...defaultFeatureflowConfig,
+        ...props.config
     };
-    this.state = {
-      featureflow: props.client,
-      config: this.config,
-      features: {}
-    }
-    this._handleUpdated = this.handleUpdated.bind(this);
+    const [state, setState] = useState({
+        featureflow: props.client,
+        config,
+        features: {}
+    })
 
-    this.state.featureflow.on('INIT', this._handleUpdated);
-    if (this.config.update){
-      this.state.featureflow.on('UPDATED_FEATURE', this._handleUpdated);
-    }
-  }
 
-  handleUpdated(){
-    this.evaluated = {};
-    const updatedFeatures = this.state.featureflow.getFeatures();
-    this.setState({features: updatedFeatures});
-  };
+    const handleUpdated = () => {
+        const updatedFeatures = this.state.featureflow.getFeatures();
+        setState({...state, features: updatedFeatures});
+    };
 
-  render() {
-    return <Provider value={this.state}>{this.props.children}</Provider>;
-  }
+    useEffect(() => {
+        state.featureflow.on('INIT', handleUpdated);
+        if (state.config.update) {
+            state.featureflow.on('UPDATED_FEATURE', handleUpdated);
+        }
+        return function cleanup() {
+            state.featureflow.off('INIT', handleUpdated);
+            state.featureflow.off('UPDATED_FEATURE', handleUpdated);
+        };
+    }, []);
 
-  componentWillUnmount(){
-    if (this._handleUpdated){
-      this.state.featureflow.off('UPDATED_FEATURE', this._handleUpdated);
-      this.state.featureflow.off('INIT', this._handleUpdated);
-    }
-  }
+    return <Provider value={state}>{props.children}</Provider>;
 }
+export default FeatureflowProvider;
