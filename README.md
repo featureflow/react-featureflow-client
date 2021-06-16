@@ -98,6 +98,43 @@ export default withFeatureflow()(MyComponent)
     waitForInit: true
   })(App)
 ```
+### Upgrading from react-featureflow-client@1.x.x
+The previous client used the deprecated react context api and took a configured featureflowClient as such:
+```jsx
+        const user = {
+          attributes:{
+            tier: 'gold',
+            country: 'australia',
+            roles: ['role1', 'role2']
+          }
+        };
+        let featureflow = Featureflow.init(constants.FF_API_KEY, user, {streaming: true});
+        ...
+      <FeatureflowProvider client={featureflow}>
+          <MyApp/>
+      </FeatureflowProvider>
+```
+The new client creates the featureflowClient instance for you and as such only requires a set of configuration.
+
+The configuration object has changed slightly to include the `user` and `apiKey`
+
+The Provider component has been wrapped in a withFeatureflowProvider HOC function for convenience.
+
+1. extract the configuration you used to create your featureflow client instance
+2. Replace `FeatureflowProvider` with `withFeatureflowProvider`
+3. Pass in the extracted configuration
+
+```jsx
+  withFeatureflowProvider({
+  featureflowConfig: {
+    user: user,
+    apiKey: constants.FF_API_KEY,
+    streaming: true
+  }
+})(MyApp)
+```
+The `withFeatureflow` HOC remains unchanged and still supplies the featureflow client as props.featureflow
+
 
 ### API
 `react-featureflow-client` exposes 2 properties.
