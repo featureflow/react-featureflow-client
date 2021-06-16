@@ -39,12 +39,19 @@ Update the version details and then:
 
 ## Example
 There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
- 
+
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
-And 
-```java
-npm run example
+Start the library if you wish (this enables hot reload into the example)
+```sh
+ yarn start
+```
+
+Then start the example server
+
+```sh
+  cd example
+  yarn start
 ```
 
 ## License

@@ -167,23 +167,6 @@ Apache-2.0
 [dependency-url]: https://www.featureflow.io
 [dependency-img]: https://www.featureflow.io/wp-content/uploads/2016/12/featureflow-web.png
 
-## Contributing
-
-To run the library
-
-```sh
- yarn start
-```
-
-To run the example
-
-```sh
-  cd example
-  yarn start
-```
-
-The library and example are linked, so you can live develop in either package.
-
 ## License
 
 Apache-2.0 © [oliveroldfield](https://github.com/oliveroldfield)
