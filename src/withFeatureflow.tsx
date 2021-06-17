@@ -8,14 +8,13 @@ const withFeatureflow = () => {
       <Consumer>
         {({ featureflow, features }: FeatureflowContext) => {
           const [evaluated, setEvaluated] = useState<EvaluateSet>({});
-
-          const evaluate = (feature: string): Evaluate => {
+          const evaluate = (feature: string): Evaluate | undefined=> {
             if(evaluated[feature] === undefined){
               const evaluatedFeature = featureflow?.evaluate(feature);
               if(evaluatedFeature){
                 setEvaluated({...evaluated, ...{[feature]:evaluatedFeature}});
               }
-              return evaluatedFeature;
+              return evaluatedFeature || undefined;
             } else {
               return evaluated[feature]
             }
