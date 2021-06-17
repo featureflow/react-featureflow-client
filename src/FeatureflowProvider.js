@@ -1,33 +1,50 @@
-import React, { Component } from 'react';
-import { featureflowClientShape, featureflowConfigShape } from './PropTypes';
-
+import React, {useEffect, useState} from 'react';
+import {Provider} from "./context";
+import { object, string, bool, node } from 'prop-types'
 
 const defaultFeatureflowConfig = {
-  update: false,
-  clientName: 'featureflow'
+    update: false,
+    clientName: 'featureflow'
 };
 
-
-export default class FeatureflowProvider extends Component{
-  getChildContext() {
-    return { featureflowClient: this.client, featureflowConfig: this.config}
-  }
-
-  constructor(props, context) {
-    super(props, context);
-    this.client = props.client;
-    this.config = {
-      ...defaultFeatureflowConfig,
-      ...props.config
+const FeatureflowProvider = (props) => {
+    const config = {
+        ...defaultFeatureflowConfig,
+        ...props.config
     };
-  }
+    const [state, setState] = useState({
+        featureflow: props.client,
+        config,
+        features: {}
+    })
 
-  render() {
-    return React.Children.only(this.props.children)
-  }
+
+    const handleUpdated = () => {
+        const updatedFeatures = this.state.featureflow.getFeatures();
+        setState({...state, features: updatedFeatures});
+    };
+
+    useEffect(() => {
+        state.featureflow.on('INIT', handleUpdated);
+        if (state.config.update) {
+            state.featureflow.on('UPDATED_FEATURE', handleUpdated);
+        }
+        return function cleanup() {
+            state.featureflow.off('INIT', handleUpdated);
+            state.featureflow.off('UPDATED_FEATURE', handleUpdated);
+        };
+    }, []);
+
+    return <Provider value={state}>{props.children}</Provider>;
+}
+FeatureflowProvider.propTypes = {
+    client: object.isRequired,
+    config: object,
+    update: bool,
+    clientName: string,
+    children: node.isRequired,
+
+
 }
 
-FeatureflowProvider.childContextTypes = {
-  featureflowClient: featureflowClientShape.isRequired,
-  featureflowConfig: featureflowConfigShape.isRequired
-};
+export default FeatureflowProvider;
