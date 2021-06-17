@@ -1,7 +1,6 @@
 //
 import React, {useEffect, useState} from 'react';
 import { Consumer } from "./context";
-import { any } from 'prop-types'
 
 const withFeatureflow = (featureflowConfig) => {
     return (WrappedComponent) => {
@@ -12,37 +11,38 @@ const withFeatureflow = (featureflowConfig) => {
                         ...config,
                         ...featureflowConfig
                     };
-                    const [state, setState] = useState({
-                        featureflow: props.client,
-                        config,
-                        features: {}
-                    });
+
+                    const currentFeatures = featureflow.getFeatures();
+                    const [features, setFeatures] = useState(currentFeatures);
+                    const [evaluates, setEvaluates] = useState(currentFeatures);
 
                     const handleUpdated = () => {
                         const updatedFeatures = this.state.featureflow.getFeatures();
-                        setState({...state, features: updatedFeatures});
+                        setFeatures(updatedFeatures);
                     }
 
                     useEffect(() => {
-                        state.featureflow.on('INIT', handleUpdated);
-                        if (state.config.update) {
-                            state.featureflow.on('UPDATED_FEATURE', handleUpdated);
+                        featureflow.on('INIT', handleUpdated);
+                        if (config.update) {
+                            featureflow.on('UPDATED_FEATURE', handleUpdated);
                         }
                         return function cleanup() {
-                            state.featureflow.off('INIT', handleUpdated);
-                            state.featureflow.off('UPDATED_FEATURE', handleUpdated);
+                            featureflow.off('INIT', handleUpdated);
+                            featureflow.off('UPDATED_FEATURE', handleUpdated);
                         };
                     }, []);
 
                     const evaluate = (feature: string) => {
-                        if (this.evaluated[feature] === undefined){
-                            this.evaluated[feature] = state.featureflow.evaluate(feature)
+                        if (evaluates[feature] === undefined){
+                            const ev = featureflow.evaluate(feature);
+                            setEvaluates(...evaluates, ...{[feature]:ev});
+                            return ev;
                         }
-                        return this.evaluated[feature];
+                        return evaluates[feature];
                     };
 
                     const goal = (goalKey: string) => {
-                        return state.featureflow.goal(goalKey);
+                        return featureflow.goal(goalKey);
                     };
 
                     return <WrappedComponent
