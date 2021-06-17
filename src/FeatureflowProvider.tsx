@@ -13,7 +13,7 @@ const defaultConfig: FeatureflowClientConfig = {
   streaming: false
 }
 const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = (props) => {
-  const { waitForInit, featureflowConfig } = props
+  const { waitForInit, featureflowConfig, client } = props
   const combinedConfig: FeatureflowClientConfig = {
     ...defaultConfig,
     ...featureflowConfig
@@ -31,7 +31,8 @@ const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = (props) => {
     featureflowConfig: FeatureflowClientConfig,
     waitForInit: boolean
   ): Promise<FeatureflowClient> => {
-    const featureflow = await createFeatureflowClient(
+
+    const featureflow = client || await createFeatureflowClient(
       featureflowConfig,
       waitForInit
     )
@@ -53,6 +54,7 @@ const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = (props) => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     // const init = async () => {
     async function init() {
+      console.log(initFeatureflow, combinedConfig, waitForInit);
       await initFeatureflow(combinedConfig, waitForInit || true)
     }
     init()

@@ -1,7 +1,5 @@
 # react-featureflow-client
 
-# react-featureflow-client
-
 [![][npm-img]][npm-url]
 
 [![][dependency-img]][dependency-url]
@@ -74,7 +72,7 @@ export default withFeatureflow()(MyComponent)
 3. That's it.
 
 4. If you want to update your component when the evaluated feature changes in realtime,
-   pass the following object to `withFeatureflowProvider`
+   set ` streaming: true` to `withFeatureflowProvider`
 ```tsx
   import { withFeatureflowProvider } from 'react-featureflow-client'
 ...
@@ -101,6 +99,8 @@ export default withFeatureflow()(MyComponent)
 ### Upgrading from react-featureflow-client@1.x.x
 The previous client used the deprecated react context api and took a configured featureflowClient as such:
 ```jsx
+        import { FeatureflowProvider } from 'react-featureflow-client';
+
         const user = {
           attributes:{
             tier: 'gold',
@@ -125,6 +125,9 @@ The Provider component has been wrapped in a withFeatureflowProvider HOC functio
 3. Pass in the extracted configuration
 
 ```jsx
+
+  import { withFeatureflowProvider } from 'react-featureflow-client';
+
   withFeatureflowProvider({
   featureflowConfig: {
     user: user,

@@ -10,29 +10,31 @@ Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
 ## Prerequisites
 
-```bash
+```sh
 nvm use
 ```
 
 ## Install
 
-```bash
+```sh
 npm install
 ```
 
 ## Test
-```
+```sh
 npm test
 ```
 
 ## Build
-```
+```sh
 npm run build
 ```
 
 ## Deploy
 Update the version details and then:
-```
+```sh
+npm publish
+#or
 ./deploy_npm.sh
 ```
 

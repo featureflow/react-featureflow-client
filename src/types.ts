@@ -18,10 +18,18 @@ export type Conditions = {
 }
 
 export interface FeatureflowClient {
-  on: any
-  off: any
-  getFeatures(): any
-  evaluate(feature: string): any
+  on(event: string, callback: Function): any
+  off(event: string): any
+  getFeatures(): EvaluatedFeatureSet
+  evaluate(feature: string): Evaluate
+  goal(goalKey: string): void
+}
+
+export interface Evaluate {
+    value(): string
+    is(value: string): string
+    isOn(): boolean
+    isOff(): boolean
 }
 
 /**
@@ -37,14 +45,37 @@ export interface FeatureflowProviderConfig {
    * This are the main featureflow-javascript-sdk configuration options used to initialise the client.
    */
   featureflowConfig?: FeatureflowClientConfig
+
+  /**
+   * You may wish to import an already instantiated featureflow client.
+   * If an externally created client is provided then this provider will not create it's own instance.
+   */
+  client?: FeatureflowClient
 }
 
+/**
+ * A set of pre-evaluated feature evaluate objects
+ */
+export interface EvaluateSet {
+  [key: string]: Evaluate
+}
+
+/**
+ * A set of partially evaluated features
+ */
 export interface FeatureSet {
   [key: string]: Feature
 }
 
+/**
+ * A set of partially evaluated features
+ */
+export interface EvaluatedFeatureSet {
+  [key: string]: string
+}
+
 export interface FeatureflowContext {
-  features: FeatureSet
+  features: EvaluatedFeatureSet
   featureflow?: FeatureflowClient
 }
 
@@ -74,6 +105,6 @@ export interface FeatureflowClientConfig {
 }
 
 export interface State {
-  features: FeatureSet
+  features: EvaluatedFeatureSet
   featureflow?: FeatureflowClient
 }
