@@ -12,31 +12,16 @@ const FeatureflowProvider = (props) => {
         ...defaultFeatureflowConfig,
         ...props.config
     };
-    const [state, setState] = useState({
+
+    const context = {
         featureflow: props.client,
         config,
         features: {}
-    })
-
-
-    const handleUpdated = () => {
-        const updatedFeatures = this.state.featureflow.getFeatures();
-        setState({...state, features: updatedFeatures});
     };
 
-    useEffect(() => {
-        state.featureflow.on('INIT', handleUpdated);
-        if (state.config.update) {
-            state.featureflow.on('UPDATED_FEATURE', handleUpdated);
-        }
-        return function cleanup() {
-            state.featureflow.off('INIT', handleUpdated);
-            state.featureflow.off('UPDATED_FEATURE', handleUpdated);
-        };
-    }, []);
-
-    return <Provider value={state}>{props.children}</Provider>;
+    return <Provider value={context}>{props.children}</Provider>;
 }
+
 FeatureflowProvider.propTypes = {
     client: object.isRequired,
     config: object,
