@@ -8,22 +8,35 @@
 
 Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
+##Note
+Version ^2.x.x uses the new react context API and therefore requires react > 16.3
+
+To use featureflow with versions of react below 16.3, please use the 1.x.x client.
+
+When using the 1.x client you will need to also include the core javascript api:
+```bash
+$ npm install --save featureflow-client
+```
+Version 2.x.x includes the core javascript SDK so there is no need to install it in addition to `react-featureflow-client`.
+
 ## Installation
 
 Using NPM
-```bash
-$ npm install --save featureflow-client
+
+```sh
 $ npm install --save react-featureflow-client
 
 ```
 ## Example
-There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
- 
+There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.tsx
+
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
-And 
-```java
-npm run example
+And
+
+```sh
+cd example
+yarn start
 ```
 
 ## Getting Started
@@ -67,10 +80,10 @@ const MyComponent = function(props){
 
 export default withFeatureflow()(MyComponent)
 ```
-3. That's it. 
+3. That's it.
 
-4. If you want to update your component when the evaluated feature changes in realtime, 
-pass the following object to `withFeatureflow`
+4. If you want to update your component when the evaluated feature changes in realtime,
+   pass the following object to `withFeatureflow`
 ```javascript
 const featureflowConfig = {
   update: true
@@ -94,9 +107,9 @@ ReactDOM.render(
 ```
 
 5. If you want your component to wait until featureflow has received an initial response, set `config.waitForInit = true`
-in the featureflowConfig. If you want to render a different component while waiting on a 
-response from featureflow, you can pass in `config.preInitComponent = <YourComponent/>`. 
-This is especially useful if you may have a race condition with your application on initial load of features.
+   in the featureflowConfig. If you want to render a different component while waiting on a
+   response from featureflow, you can pass in `config.preInitComponent = <YourComponent/>`.
+   This is especially useful if you may have a race condition with your application on initial load of features.
 
 ```javascript
 const featureflowConfig = {
@@ -111,7 +124,7 @@ export default withFeatureflow(featureflowConfig)(MyComponent);
 `react-featureflow-client` exposes 2 properties.
 ```javascript
 import {
-  FeatureflowProvider, 
+  FeatureflowProvider,
   withFeatureflow
 } from 'react-featureflow-client';
 ```
@@ -151,9 +164,9 @@ class MyComponent extends React.Component{
   render(){
     return (
       <div>
-        {this.props.customFeatureflow.evaluate('example-feature').isOn() && 
+        {this.props.customFeatureflow.evaluate('example-feature').isOn() &&
           <p>
-            This text will be shown if "example-feature" is "on". 
+            This text will be shown if "example-feature" is "on".
             It will be updated in realtime if "example-feature" changes it's value.
           </p>
         }

@@ -10,41 +10,50 @@ Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
 ## Prerequisites
 
-```bash
+```sh
 nvm use
 ```
 
 ## Install
 
-```bash
+```sh
 npm install
 ```
 
 ## Test
-```
+```sh
 npm test
 ```
 
 ## Build
-```
+```sh
 npm run build
 ```
 
 ## Deploy
 Update the version details and then:
-```
+```sh
+npm publish
+#or
 ./deploy_npm.sh
 ```
 
 
 ## Example
 There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
- 
+
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
-And 
-```java
-npm run example
+Start the library if you wish (this enables hot reload into the example)
+```sh
+ yarn start
+```
+
+Then start the example server
+
+```sh
+  cd example
+  yarn start
 ```
 
 ## License
