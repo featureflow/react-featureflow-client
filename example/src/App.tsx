@@ -1,20 +1,11 @@
 import React from 'react'
 
-import { withFeatureflow, withFeatureflowProvider, FeatureflowInjectedProps } from 'react-featureflow-client'
-import 'react-featureflow-client/dist/index.css'
+import { withFeatureflow, FeatureflowInjectedProps } from 'react-featureflow-client'
+import './index.css'
 
 type Props = {
   feature: string
 }
-const FF_KEY = 'js-env-bbb659960a3344c5a31681282c0c4bdf';
-
-const user = {
-  attributes:{
-    tier: 'gold',
-    country: 'australia',
-    roles: ['role1', 'role2']
-  }
-};
 
 const App: React.FC<Props & FeatureflowInjectedProps> = (props) => {
   const {feature, featureflow} = props;
@@ -31,11 +22,4 @@ const App: React.FC<Props & FeatureflowInjectedProps> = (props) => {
   </div>
 }
 
-export default withFeatureflowProvider({
-  featureflowConfig: {
-    user: user,
-    apiKey: FF_KEY,
-    streaming: true,
-  },
-  waitForInit: true
-})(withFeatureflow()(App))
+export default (withFeatureflow({update: true, waitForInit: true, preInitComponent: <div>loading</div>})(App))

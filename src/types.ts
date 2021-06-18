@@ -23,6 +23,7 @@ export interface FeatureflowClient {
   getFeatures(): EvaluatedFeatureSet
   evaluate(feature: string): Evaluate
   goal(goalKey: string): void
+  hasReceivedInitialResponse(): boolean
 }
 
 export interface Evaluate {
@@ -33,24 +34,14 @@ export interface Evaluate {
 }
 
 /**
- * Contqins the configuration available to initialise and provide a featureflow client
+ * Contains the configuration available to initialise and provide a featureflow client
  */
 export interface FeatureflowProviderConfig {
+  config?: FeatureflowConfig
   /**
-   * If waitForInit is true then the application will not be initialised until featureflow has received evaluated features.
-   * Featureflow uses a unique combination of global CDN, edge-caching and smart split-evaluation to optimise delivery.
+   * Your instantiated featureflow client.
    */
-  waitForInit?: boolean
-  /**
-   * This are the main featureflow-javascript-sdk configuration options used to initialise the client.
-   */
-  featureflowConfig?: FeatureflowClientConfig
-
-  /**
-   * You may wish to import an already instantiated featureflow client.
-   * If an externally created client is provided then this provider will not create it's own instance.
-   */
-  client?: FeatureflowClient
+  client: FeatureflowClient
 }
 
 /**
@@ -75,8 +66,22 @@ export interface EvaluatedFeatureSet {
 }
 
 export interface FeatureflowContext {
+  config: FeatureflowConfig
   features: EvaluatedFeatureSet
-  featureflow?: FeatureflowClient
+  featureflow: FeatureflowClient
+}
+
+/**
+ * Configuration to be passed
+ * to either the FeatureflowProvider
+ * or the withFeatureflow HOC
+ * Passing to the featureflowProvider sets the 'defaults' for each consumer
+ * Setting in the withFeatureflow HOC overrides the defaults for the underlying component.
+ */
+export interface FeatureflowConfig {
+  update?: boolean,
+  waitForInit?: boolean,
+  preInitComponent?: JSX.Element
 }
 
 export interface FeatureflowInjectedProps {
@@ -105,6 +110,7 @@ export interface FeatureflowClientConfig {
 }
 
 export interface State {
+  config: FeatureflowConfig
   features: EvaluatedFeatureSet
-  featureflow?: FeatureflowClient
+  featureflow: FeatureflowClient
 }
