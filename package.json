@@ -1,6 +1,6 @@
 {
   "name": "react-featureflow-client",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.7",
   "description": "React Library wrapper for the featureflow javascript SDK",
   "author": "Oliver Oldfield-Hodge <oliver@featureflow.io>",
   "license": "Apache-2.0",
@@ -34,7 +34,7 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
-    "featureflow-client": "^1.3.11"
+    "featureflow-client": "^1.3.12"
   },
   "peerDependencies": {
     "react": "^16.0.0 || ^17.0.0",

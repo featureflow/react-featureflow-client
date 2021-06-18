@@ -22,7 +22,8 @@ Version 2.x.x includes the core javascript SDK so there is no need to install it
 ## Installation
 
 Using NPM
-```bash
+
+```sh
 $ npm install --save react-featureflow-client
 
 ```
@@ -32,7 +33,8 @@ There is a very simple example in this repository. Add your JS Client Environmen
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
 And
-```java
+
+```sh
 npm run example
 ```
 
