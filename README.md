@@ -8,41 +8,51 @@
 
 Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
+##Note
+Version ^2.x.x uses the new react context API and therefore requires react > 16.3
+
+To use featureflow with versions of react below 16.3, please use the 1.x.x client.
+
+When using the 1.x client you will need to also include the core javascript api:
+```bash
+$ npm install --save featureflow-client
+```
+Version 2.x.x includes the core javascript SDK so there is no need to install it in addition to `react-featureflow-client`.
+
 ## Installation
 
 Using NPM
-```sh
-  npm install --save react-featureflow-client
+```bash
+$ npm install --save react-featureflow-client
 
 ```
-Note that the featureflow javascript sdk is included in this dependency. If you were using a previous version of our react SDK you can safely remove the `featureflow-client` dependency.
-
 ## Example
-There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/App.tsx
+There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
 
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
 And
-```sh
-  npm run example
+```java
+npm run example
 ```
 
 ## Getting Started
-1. Wrap your root application component with the `withFeatureflowProvider` hoc.
-
-```tsx
-  import { withFeatureflowProvider } from 'react-featureflow-client'
-...
-  withFeatureflowProvider({
-    featureflowConfig: {
-      user: user,
-      apiKey: FF_KEY,
-    }
-  })(App)
+1. Wrap `<FeatureflowProvider client={featureflow}>` (with an initialised `featureflow` client) around the root of your application.
+```javascript
+//...
+import Featureflow from 'featureflow-client';
+import { FeatureflowProvider } from 'react-featureflow-client';
+//...
+const featureflow = Featureflow.init(API_KEY);
+//...
+ReactDOM.render(
+  <FeatureflowProvider client={featureflow}>
+    <App />
+  </FeatureflowProvider>,
+  document.getElementById('app')
+);
 ```
-This will provide an instance of the featureflowClient and inject the client through your application using the react context api.
-
-2. Wrap your components with `withFeatureflow` and you can access `props.featureflow`.
+2. Wrap your component with `withFeatureflow` and you can access `props.featureflow`.
 ```javascript
 import { withFeatureflow } from 'react-featureflow-client';
 const MyComponent = function(props){
@@ -67,77 +77,45 @@ const MyComponent = function(props){
 
 export default withFeatureflow()(MyComponent)
 ```
-
-
 3. That's it.
 
 4. If you want to update your component when the evaluated feature changes in realtime,
-   set ` streaming: true` to `withFeatureflowProvider`
-```tsx
-  import { withFeatureflowProvider } from 'react-featureflow-client'
-...
-  withFeatureflowProvider({
-    featureflowConfig: {
-      user: user,
-      apiKey: FF_KEY,
-      streaming: true
-    }
-  })(App)
+   pass the following object to `withFeatureflow`
+```javascript
+const featureflowConfig = {
+  update: true
+}
+export default withFeatureflow(featureflowConfig)(MyComponent);
 ```
 
-5. If you want your component to wait until featureflow has received an initial response, set `waitForInit: true`
-   in the featureflowConfig.
+or for every component in the `FeatureflowProvider`
 
-```tsx
-  withFeatureflowProvider({
-    featureflowConfig: {
-      apiKey: FF_KEY
-    },
-    waitForInit: true
-  })(App)
+```javascript
+const featureflowConfig = {
+  update: true
+}
+
+ReactDOM.render(
+  <FeatureflowProvider client={featureflow} config={featureflowConfig}>
+    <App />
+  </FeatureflowProvider>,
+  document.getElementById('app')
+);
 ```
-### Upgrading from react-featureflow-client@1.x.x
-The previous client used the deprecated react context api and took a configured featureflowClient as such:
-```jsx
-        import { FeatureflowProvider } from 'react-featureflow-client';
 
-        const user = {
-          attributes:{
-            tier: 'gold',
-            country: 'australia',
-            roles: ['role1', 'role2']
-          }
-        };
-        let featureflow = Featureflow.init(constants.FF_API_KEY, user, {streaming: true});
-        ...
-      <FeatureflowProvider client={featureflow}>
-          <MyApp/>
-      </FeatureflowProvider>
+5. If you want your component to wait until featureflow has received an initial response, set `config.waitForInit = true`
+   in the featureflowConfig. If you want to render a different component while waiting on a
+   response from featureflow, you can pass in `config.preInitComponent = <YourComponent/>`.
+   This is especially useful if you may have a race condition with your application on initial load of features.
+
+```javascript
+const featureflowConfig = {
+  waitForInit: true,
+  preInitComponent: <YourComponent/>
+}
+
+export default withFeatureflow(featureflowConfig)(MyComponent);
 ```
-The new client creates the featureflowClient instance for you and as such only requires a set of configuration.
-
-The configuration object has changed slightly to include the `user` and `apiKey`
-
-The Provider component has been wrapped in a withFeatureflowProvider HOC function for convenience.
-
-1. extract the configuration you used to create your featureflow client instance
-2. Replace `FeatureflowProvider` with `withFeatureflowProvider`
-3. Pass in the extracted configuration
-
-```jsx
-
-  import { withFeatureflowProvider } from 'react-featureflow-client';
-
-  withFeatureflowProvider({
-  featureflowConfig: {
-    user: user,
-    apiKey: constants.FF_API_KEY,
-    streaming: true
-  }
-})(MyApp)
-```
-The `withFeatureflow` HOC remains unchanged and still supplies the featureflow client as props.featureflow
-
 
 ### API
 `react-featureflow-client` exposes 2 properties.
@@ -206,7 +184,3 @@ Apache-2.0
 
 [dependency-url]: https://www.featureflow.io
 [dependency-img]: https://www.featureflow.io/wp-content/uploads/2016/12/featureflow-web.png
-
-## License
-
-Apache-2.0 © [oliveroldfield](https://github.com/oliveroldfield)
