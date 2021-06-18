@@ -8,7 +8,7 @@ import {FeatureflowProvider} from 'react-featureflow-client'
 const Featureflow = require('featureflow-client') // until we convert to TS
 
 
-const FF_KEY = 'js-env-bbb659960a3344c5a31681282c0c4bdf';
+const FF_KEY = 'js-env-YOUR_KEY_HERE';
 
 const user = {
   attributes:{

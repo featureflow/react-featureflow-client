@@ -28,14 +28,15 @@ $ npm install --save react-featureflow-client
 
 ```
 ## Example
-There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.js
+There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.tsx
 
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
 And
 
 ```sh
-npm run example
+cd example
+yarn start
 ```
 
 ## Getting Started
