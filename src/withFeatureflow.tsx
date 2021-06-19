@@ -47,7 +47,7 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
         }
       }, [])
 
-      const evaluate = (feature: string): Evaluate | undefined => {
+      const evaluate = (feature: string): Evaluate => {
         if (evaluated[feature] === undefined) {
           const evaluatedFeature = featureflow.evaluate(feature);
           setEvaluated({...evaluated, ...{[feature]: evaluatedFeature}});
@@ -57,17 +57,16 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
         }
       }
 
-      const goal = (goalKey: string) => {
-        featureflow.goal(goalKey);
+      const memoisedFeatureflow = {
+        ...featureflow,
+        evaluate
       }
 
       return (
         !featureflow.hasReceivedInitialResponse() && combinedConfig.waitForInit ? combinedConfig.preInitComponent ||
           <div></div> :
           <WrappedComponent
-            featureflow={featureflow}
-            evaluate={evaluate}
-            goal={goal}
+            featureflow={memoisedFeatureflow}
             features={features}
             {...props}
           />
