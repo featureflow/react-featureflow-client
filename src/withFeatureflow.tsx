@@ -13,7 +13,6 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
     const wrapped: React.FC<P> = (props) => {
 
       const {config: contextConfig, featureflow} = useContext(context);
-      console.log('featureflow client is: ', featureflow);
       const [evaluated, setEvaluated] = useState<EvaluateSet>({});
       const [features, setFeatures] = useState<EvaluatedFeatureSet>(featureflow.getFeatures());
       const combinedConfig: FeatureflowConfig = {
@@ -23,7 +22,6 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
 
       useEffect(() => {
         featureflow.on('INIT', () => {
-          console.log('useEffect featureflow client is: ', featureflow);
           setFeatures(featureflow.getFeatures())
         });
         if (combinedConfig.update) {
@@ -37,7 +35,6 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
         }
 
         return function cleanup(): void {
-          console.log('clean up featureflow emitters')
           if (featureflow) {
             featureflow.off('INIT')
             if (combinedConfig.update) {
