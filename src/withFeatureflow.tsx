@@ -28,8 +28,8 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
         });
         if (combinedConfig.update) {
           featureflow.on('UPDATED_FEATURE', () => {
-
             const handleUpdated = (featureflow: FeatureflowClient): void => {
+              setEvaluated({})
               setFeatures(featureflow.getFeatures())
             }
             handleUpdated(featureflow)
