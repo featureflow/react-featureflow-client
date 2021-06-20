@@ -5101,10 +5101,10 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "2.1.1"
 
-featureflow-client@^1.3.11:
-  version "1.3.11"
-  resolved "https://registry.yarnpkg.com/featureflow-client/-/featureflow-client-1.3.11.tgz#f04e88fbfc27368536584b3675e7e8404c65635c"
-  integrity sha512-C4a54pmCFgEni/1tgJcJb6fU0RENmZOFt2MyMKjNLVTZTZiGb9L1GhfNOjlCpQdu3kFnErkI6Cfp9R6ctQG6hg==
+featureflow-client@^1.3.13:
+  version "1.3.13"
+  resolved "https://registry.yarnpkg.com/featureflow-client/-/featureflow-client-1.3.13.tgz#0f8af2e055cf6bb3a2ef43e2c37949fdc80e6113"
+  integrity sha512-9jEqyjKwywakWc2h0VBkuQPWfF47p0gHW1UH+xDCzb3vS2KR3W2f4QNe2ZwvXO6S5WcOW1Biizxy6goafGIGWg==
   dependencies:
     js-cookie "^2.1.4"
     tiny-emitter "^1.2.0"
