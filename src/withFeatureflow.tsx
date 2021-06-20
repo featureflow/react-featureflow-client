@@ -10,10 +10,11 @@ import {
 
 const withFeatureflow = (config?: FeatureflowConfig) => {
   return function hoc<P>(WrappedComponent: React.ComponentType<P>) {
+    let cache: EvaluateSet = {};
+
     const wrapped: React.FC<P> = (props) => {
 
       const {config: contextConfig, featureflow} = useContext(context);
-      const [evaluated, setEvaluated] = useState<EvaluateSet>({});
       const [features, setFeatures] = useState<EvaluatedFeatureSet>(featureflow.getFeatures());
       const combinedConfig: FeatureflowConfig = {
         ...contextConfig,
@@ -25,9 +26,11 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
           setFeatures(featureflow.getFeatures())
         });
         if (combinedConfig.update) {
-          featureflow.on('UPDATED_FEATURE', () => {
+          featureflow.on('UPDATED_FEATURE', (item: any) => {
             const handleUpdated = (featureflow: FeatureflowClient): void => {
-              setEvaluated({})
+              if(item){
+                Object.keys(item).map(key => delete cache[key]);
+              }
               setFeatures(featureflow.getFeatures())
             }
             handleUpdated(featureflow)
@@ -45,12 +48,12 @@ const withFeatureflow = (config?: FeatureflowConfig) => {
       }, [])
 
       const evaluate = (feature: string): Evaluate => {
-        if (evaluated[feature] === undefined) {
+        if (cache[feature] === undefined) {
           const evaluatedFeature = featureflow.evaluate(feature);
-          setEvaluated({...evaluated, ...{[feature]: evaluatedFeature}});
+          cache = ({...cache, ...{[feature]: evaluatedFeature}});
           return evaluatedFeature;
         } else {
-          return evaluated[feature]
+          return cache[feature]
         }
       }
 
