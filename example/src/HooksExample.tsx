@@ -14,14 +14,14 @@ const HooksExample: React.FC<Props> = (props) => {
   return <div>
     <b>{feature}</b>
     { featureflow.evaluate(feature).isOn() && [
-        <p key="1">I am on</p>,
+        <p key="1">{feature} is on</p>,
     ]}
     { featureflow.evaluate(feature).isOff() && [
-      <p key="1">I am off</p>,
+      <p key="1">{feature} is off</p>,
       ]
     }
 
-    {Object.keys(features).map(key => <div>{key} : {features[key]}</div>)}
+    {Object.keys(features).map(key => <div key={key}>{key} : {features[key]}</div>)}
   </div>
 }
 

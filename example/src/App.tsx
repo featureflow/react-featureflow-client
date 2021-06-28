@@ -14,10 +14,11 @@ const App: React.FC<Props> = () => {
   return  <div>
     <h1>An example of using the featureflow client in a react js </h1>
 
-    <h2>This one uses hooks</h2>
-    <HocExample feature="example-feature"/>
-    <h2>This one uses the withFeatureflow hoc</h2>
+    <h2>This one uses hooks, and is the recommended approach</h2>
     <HooksExample feature="example-feature"/>
+    <hr/>
+    <h2>This one uses the withFeatureflow hoc</h2>
+    <HocExample feature="example-feature"/>
   </div>
 }
 

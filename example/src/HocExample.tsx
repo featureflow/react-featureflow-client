@@ -21,7 +21,7 @@ const HocExample: React.FC<Props> = (props: Props) => {
       ]
     }
 
-    {Object.keys(features).map(key => <div>{key} : {features[key]}</div>)}
+    {Object.keys(features).map(key => <div key={key}>{key} : {features[key]}</div>)}
   </div>
 }
 

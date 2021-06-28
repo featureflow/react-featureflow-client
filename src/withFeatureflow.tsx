@@ -34,7 +34,6 @@ const withFeatureflow = (config?: FeatureflowReactConfig) => {
             featureflow: memoisedFeatureflow,
             features: features
           }
-        debugger;
           return (
             !featureflow.hasReceivedInitialResponse() && combinedConfig.waitForInit ? combinedConfig.preInitComponent ||
               <div></div> :
