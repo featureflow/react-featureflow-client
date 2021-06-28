@@ -1,12 +1,13 @@
 import { createContext } from 'react'
-import { FeatureflowContext } from './types'
+import {FeatureflowClientConfig, FeatureflowContext} from './types'
 const Featureflow = require('featureflow-client') // until we convert to TS
 
-const ff = Featureflow.init('offline', undefined, {offline: true});
+export const offlineFeatureflow = (config?: FeatureflowClientConfig) => {
+  return Featureflow.init('offline', undefined, {...config, offline: true});
+}
 const context = createContext<FeatureflowContext>({
-  featureflow: ff,
-  config: {},
-  features: {}
+  features: {},
+  featureflow: offlineFeatureflow()
 })
 
 const { Provider, Consumer } = context

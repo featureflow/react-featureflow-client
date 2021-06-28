@@ -1,14 +1,14 @@
 import React  from 'react'
 import { Provider } from './context'
 import {
-  FeatureflowConfig,
+  FeatureflowReactConfig,
   FeatureflowProviderConfig,
 } from './types'
 
 const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = (props) => {
   const { client, children } = props
 
-  const defaultConfig: FeatureflowConfig = {
+  const defaultConfig: FeatureflowReactConfig = {
     update: false,
     waitForInit: false,
     preInitComponent: <div></div>

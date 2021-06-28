@@ -1,25 +1,40 @@
 import React from 'react'
 
-import { withFeatureflow, FeatureflowInjectedProps } from 'react-featureflow-client'
+import { withFeatureflowProvider } from 'react-featureflow-client'
 import './index.css'
+import HocExample from "./HocExample";
+import HooksExample from "./HooksExample";
 
 type Props = {
   feature: string
 }
 
-const App: React.FC<Props & FeatureflowInjectedProps> = (props) => {
-  const {feature, featureflow} = props;
+const App: React.FC<Props> = () => {
+
   return  <div>
-    <h1>A very simple example</h1>
-    <b>{feature}</b>
-    { featureflow && featureflow.evaluate(feature).isOn() && [
-        <p key="1">I am on</p>,
-    ]}
-    { featureflow && featureflow.evaluate(feature).isOff() && [
-      <p key="1">I am off</p>,
-      ]
-    }
+    <h1>An example of using the featureflow client in a react js </h1>
+
+    <h2>This one uses hooks</h2>
+    <HocExample feature="example-feature"/>
+    <h2>This one uses the withFeatureflow hoc</h2>
+    <HooksExample feature="example-feature"/>
   </div>
 }
 
-export default (withFeatureflow({update: true, waitForInit: true, preInitComponent: <div>loading</div>})(App))
+const FF_KEY = 'js-env-bbb659960a3344c5a31681282c0c4bdf';
+const user = {
+  attributes: {
+    tier: 'gold',
+    country: 'australia',
+    roles: ['role1', 'role2']
+  }
+};
+
+export default (withFeatureflowProvider({
+  apiKey: FF_KEY,
+  config: {
+    offline: false,
+    streaming: true,
+  },
+  user
+})(App))

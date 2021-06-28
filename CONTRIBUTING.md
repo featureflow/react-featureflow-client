@@ -56,6 +56,11 @@ Then start the example server
   yarn start
 ```
 
+Deploying
+
+```shell
+npm publish
+```
 ## License
 
 Apache-2.0

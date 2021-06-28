@@ -28,7 +28,7 @@ $ npm install --save react-featureflow-client
 
 ```
 ## Example
-There is a very simple example in this repository. Add your JS Client Environment SDK Key to example/src/index.tsx
+There is an example in this repository. Add your JS Client Environment SDK Key to example/src/index.tsx
 
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
 
@@ -40,85 +40,65 @@ yarn start
 ```
 
 ## Getting Started
-1. Wrap `<FeatureflowProvider client={featureflow}>` (with an initialised `featureflow` client) around the root of your application.
+Getting started is simple:
+
+1. Wrap your application with a featureflow provider - there should only be one provider - it should sit at your top level App component.
+
+If you have
 ```javascript
-//...
-import Featureflow from 'featureflow-client';
-import { FeatureflowProvider } from 'react-featureflow-client';
-//...
-const featureflow = Featureflow.init(API_KEY);
-//...
-ReactDOM.render(
-  <FeatureflowProvider client={featureflow}>
-    <App />
-  </FeatureflowProvider>,
-  document.getElementById('app')
-);
+  ReactDOM.render(
+      <App feature="example-feature"/>,
+    document.getElementById('root')
+  );
 ```
-2. Wrap your component with `withFeatureflow` and you can access `props.featureflow`.
+wrap `App` using `withFeatureflowProvider`:
 ```javascript
-import { withFeatureflow } from 'react-featureflow-client';
-const MyComponent = function(props){
-  const { evaluate } = props.featureflow;
-  return (
-    <div>
-      <h1>New Feature</h1>
-      {evaluate("my-feature-key").isOn() && (
-        <div>
-          <h2>I will be seen when the feature is on</h2>
-          <p>And this is some extra text</p>
-        </div>
-      )}
-      {evaluate("my-feature-key").isOff() && (
-        <div>
-          <h2>This should not be seen if the feature is on</h2>
-        </div>
-      )}
-    </div>
-  )
+import { withFeatureflowProvider, useFeatureflow, useFeatures } from 'react-featureflow-client'
+
+const FF_KEY = 'js-env-YOUR_KEY_HERE';
+const user = {
+  attributes: {
+    tier: 'gold',
+    country: 'australia',
+    roles: ['role1', 'role2']
+  }
 };
 
-export default withFeatureflow()(MyComponent)
-```
-3. That's it.
-
-4. If you want to update your component when the evaluated feature changes in realtime,
-   pass the following object to `withFeatureflow`
-```javascript
-const featureflowConfig = {
-  update: true
-}
-export default withFeatureflow(featureflowConfig)(MyComponent);
+export default (withFeatureflowProvider({
+  apiKey: FF_KEY,
+  config: {
+    streaming: true,
+  },
+  user
+})(App))
 ```
 
-or for every component in the `FeatureflowProvider`
+2. You then have access to the `featureflow` client and evaluated `features` using hooks:
 
 ```javascript
-const featureflowConfig = {
-  update: true
-}
+import { useFeatureflow, useFeatures } from 'react-featureflow-client'
 
-ReactDOM.render(
-  <FeatureflowProvider client={featureflow} config={featureflowConfig}>
-    <App />
-  </FeatureflowProvider>,
-  document.getElementById('app')
-);
+const App: React.FC<Props> = () => {
+
+  const featureflow = useFeatureflow();
+  const features = useFeatures();
+  const feature = 'example-feature';
+
+  return  <div>
+    <h1>A very simple example</h1>
+    <b>{feature}</b>
+    { featureflow.evaluate(feature).isOn() && [
+        <p key="1">I am on</p>,
+    ]}
+    { featureflow.evaluate(feature).isOff() && [
+      <p key="1">I am off</p>,
+      ]
+    }
+    {Object.keys(features).map(key => <div>{key} : {features[key]}</div>)}
+  </div>
+}
 ```
 
-5. If you want your component to wait until featureflow has received an initial response, set `config.waitForInit = true`
-   in the featureflowConfig. If you want to render a different component while waiting on a
-   response from featureflow, you can pass in `config.preInitComponent = <YourComponent/>`.
-   This is especially useful if you may have a race condition with your application on initial load of features.
-
-```javascript
-const featureflowConfig = {
-  waitForInit: true,
-  preInitComponent: <YourComponent/>
-}
-
-export default withFeatureflow(featureflowConfig)(MyComponent);
-```
 
 ### API
 `react-featureflow-client` exposes 2 properties.
