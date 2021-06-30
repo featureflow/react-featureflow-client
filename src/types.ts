@@ -117,7 +117,8 @@ export interface FeatureflowClientConfig {
   streaming?: boolean
   useCookies?: boolean
   offline?: boolean
-  defaultFeatures?: FeatureSet
+  defaultFeatures?: FeatureSet,
+  uniqueEvals?: boolean
 }
 
 export interface State {

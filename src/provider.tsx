@@ -7,7 +7,7 @@ import {
   EnhancedComponent,
   EvaluatedFeatureSet,
   FeatureflowClient,
-  FeatureflowContext as ProviderState
+  FeatureflowContext as ProviderState,
 } from "./types";
 
 class FeatureflowProvider extends React.Component<AsyncFeatureflowProviderConfig, ProviderState> implements EnhancedComponent {
@@ -49,7 +49,7 @@ class FeatureflowProvider extends React.Component<AsyncFeatureflowProviderConfig
 
     const featureflow = await createFeatureflowClient(apiKey, config, user);
     this.setState({ features: featureflow.getFeatures(), featureflow });
-    this.subscribeToChanges(featureflow);
+    this.subscribeToChanges(this.state.featureflow);
   };
 
   async componentDidMount() {

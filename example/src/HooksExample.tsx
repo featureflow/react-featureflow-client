@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import { useFeatureflow, useFeatures } from 'react-featureflow-client'
 import './index.css'
@@ -11,6 +11,11 @@ const HooksExample: React.FC<Props> = (props) => {
   const featureflow = useFeatureflow();
   const features = useFeatures();
   const {feature} = props;
+  const [goal, setGoal] = useState(false);
+  if(!goal && featureflow.hasReceivedInitialResponse()){
+    featureflow.goal("hoc-page-viewed");
+    setGoal(true);
+  }
   return <div>
     <b>{feature}</b>
     { featureflow.evaluate(feature).isOn() && [
@@ -22,6 +27,8 @@ const HooksExample: React.FC<Props> = (props) => {
     }
 
     {Object.keys(features).map(key => <div key={key}>{key} : {features[key]}</div>)}
+
+
   </div>
 }
 
