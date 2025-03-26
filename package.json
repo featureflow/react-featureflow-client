@@ -1,8 +1,8 @@
 {
   "name": "react-featureflow-client",
-  "version": "2.0.8",
+  "version": "2.0.11",
   "description": "React Library wrapper for the featureflow javascript SDK",
-  "author": "Oliver Oldfield-Hodge <oliver@featureflow.io>",
+  "author": "Featureflow Pty. Ltd. <support@featureflow.io>",
   "license": "Apache-2.0",
   "repository": "featureflow/react-featureflow-client",
   "homepage": "https://github.com/featureflow/react-featureflow-client#readme",
@@ -34,11 +34,11 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
-    "featureflow-client": "1.3.17"
+    "featureflow-client": "1.3.18"
   },
   "peerDependencies": {
-    "react": "^16.0.0 || ^17.0.0",
-    "react-dom": "^16.0.0 || ^17.0.0"
+    "react": ">=0.16.0 <= 20",
+    "react-dom": ">=0.16.0 <= 20"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
