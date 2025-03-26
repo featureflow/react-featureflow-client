@@ -44,6 +44,7 @@ export interface FeatureflowProviderConfig {
    * Your instantiated featureflow client.
    */
   client: FeatureflowClient
+  children?: ReactNode
 }
 
 /**
