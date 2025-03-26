@@ -66,9 +66,6 @@ const user = {
 
 export default (withFeatureflowProvider({
   apiKey: FF_KEY,
-  config: {
-    streaming: true,
-  },
   user
 })(App))
 ```
