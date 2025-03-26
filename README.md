@@ -98,11 +98,9 @@ const App: React.FC<Props> = () => {
   </div>
 }
 ```
-:::note
 
-The above method is the --recommended-- method of integrating featureflow.
+The above method is the recommended method of integrating featureflow.
 
-:::
 
 If you have the featureflow client previously initialised from the javascript client, you can use the provider pattern, for example:
 
@@ -164,6 +162,7 @@ export default AppWrapper
 
 ```
 
+Again, ensure only 1 featureflow client is initialised in your application.
 
 ### API
 `react-featureflow-client` exposes 2 properties.
