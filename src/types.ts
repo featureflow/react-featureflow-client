@@ -25,6 +25,7 @@ export interface FeatureflowClient {
   getFeatures(): EvaluatedFeatureSet
   evaluate(feature: string): Evaluate
   goal(goalKey: string): void
+  updateUser(user: FeatureflowUser): void
   hasReceivedInitialResponse(): boolean
 }
 
