@@ -4,7 +4,7 @@ import withAsyncFeatureflowProvider from './withAsyncFeatureflowProvider';
 import withFeatureflow from './withFeatureflow'
 import useFeatureflow from "./useFeatureflow";
 import useFeatures from "./useFeatures";
-import type { FeatureflowInjectedProps } from './types'
+import type { FeatureflowInjectedProps, FeatureflowUser, UserAttributes } from './types'
 
 export { withFeatureflowProvider, withAsyncFeatureflowProvider, FeatureflowProvider, withFeatureflow, useFeatureflow, useFeatures }
-export type { FeatureflowInjectedProps }
+export type { FeatureflowInjectedProps, FeatureflowUser, UserAttributes }
