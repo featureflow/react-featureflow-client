@@ -37,7 +37,7 @@ export interface FeatureflowClient {
  */
 export interface FeatureflowProviderConfig {
   apiKey: string
-  config: Config,
+  config?: Config,
   user?: FeatureflowUser
 }
 

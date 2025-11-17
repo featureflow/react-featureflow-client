@@ -17,9 +17,6 @@ const App: React.FC = () => {
   return (
     <FeatureflowProvider
       apiKey={FF_KEY}
-      config={{
-        offline: false,
-      }}
       user={user}
     >
       <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>

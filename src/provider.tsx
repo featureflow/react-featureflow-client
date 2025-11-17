@@ -13,7 +13,7 @@ import type {
 const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = ({ apiKey, config, user, children }) => {
   // Create a synchronous offline client for initial state
   const offlineClient = new FeatureflowClientClass('offline', undefined, {
-    ...config,
+    ...config || {},
     offline: true,
     delayInit: true
   });
