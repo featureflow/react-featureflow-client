@@ -1,29 +1,11 @@
-import React from 'react'
-
-import { withFeatureflowProvider } from 'react-featureflow-client'
-import './index.css'
-import HocExample from "./HocExample";
-import HooksExample from "./HooksExample";
-
-type Props = {
-  feature: string
-}
-
-const App: React.FC<Props> = () => {
-
-  return  <div>
-    <h1>An example of using the featureflow client in a react js </h1>
-
-    <h2>This one uses hooks, and is the recommended approach</h2>
-    <HooksExample feature="example-feature"/>
-    <hr/>
-    <h2>This one uses the withFeatureflow hoc</h2>
-    <HocExample feature="example-feature"/>
-  </div>
-}
+import React from 'react';
+import { FeatureflowProvider } from 'react-featureflow-client';
+import './index.css';
+import HooksExample from './HooksExample';
 
 const FF_KEY = 'js-env-bbb659960a3344c5a31681282c0c4bdf';
 const user = {
+  id: 'user-123',
   attributes: {
     tier: 'gold',
     country: 'australia',
@@ -31,11 +13,26 @@ const user = {
   }
 };
 
-export default (withFeatureflowProvider({
-  apiKey: FF_KEY,
-  config: {
-    offline: false,
-    streaming: true,
-  },
-  user
-})(App))
+const App: React.FC = () => {
+  return (
+    <FeatureflowProvider
+      apiKey={FF_KEY}
+      config={{
+        offline: false,
+      }}
+      user={user}
+    >
+      <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+        <h1>React Featureflow Client Example</h1>
+        
+        <section style={{ marginBottom: '40px' }}>
+          <h2>Featureflow Hooks Example</h2>
+          <p>This example demonstrates using the <code>useFeatureflow</code> and <code>useFeatures</code> hooks.</p>
+          <HooksExample feature="example-feature" />
+        </section>
+      </div>
+    </FeatureflowProvider>
+  );
+};
+
+export default App;

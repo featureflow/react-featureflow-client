@@ -1,64 +1,74 @@
-import * as React from 'react';
-import {offlineFeatureflow, Provider} from './context';
+import React, { useState, useEffect } from 'react';
+import { Provider } from './context';
+import { FeatureflowClient as FeatureflowClientClass } from 'featureflow-client';
 
 import createFeatureflowClient from "./createFeatureflowClient";
-import {
-  AsyncFeatureflowProviderConfig,
-  EnhancedComponent,
-  EvaluatedFeatureSet,
+import type {
+  FeatureflowProviderConfig,
+  EvaluatedFeatures,
   FeatureflowClient,
-  FeatureflowContext as ProviderState,
+  FeatureflowContext,
 } from "./types";
 
-class FeatureflowProvider extends React.Component<AsyncFeatureflowProviderConfig, ProviderState> implements EnhancedComponent {
-  readonly state: Readonly<ProviderState>;
+const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = ({ apiKey, config, user, children }) => {
+  // Create a synchronous offline client for initial state
+  const offlineClient = new FeatureflowClientClass('offline', undefined, {
+    ...config,
+    offline: true,
+    delayInit: true
+  });
 
-  constructor(props: AsyncFeatureflowProviderConfig) {
-    super(props);
+  const [state, setState] = useState<FeatureflowContext>({
+    features: {},
+    featureflow: offlineClient,
+  });
 
-    this.state = {
-      features: {},
-      featureflow: offlineFeatureflow(this.props.config),
+  useEffect(() => {
+    let isMounted = true;
+
+    const initialiseFeatureflow = async () => {
+      const featureflow = await createFeatureflowClient(apiKey, config, user);
+      
+      if (!isMounted) return;
+
+      setState({
+        features: featureflow.getFeatures(),
+        featureflow,
+      });
+
+      const subscribeToChanges = (featureflow: FeatureflowClient) => {
+        featureflow.on('INIT', () => {
+          const newFeatures: EvaluatedFeatures = featureflow.getFeatures();
+          if (Object.keys(newFeatures).length > 0) {
+            setState((prevState) => ({
+              ...prevState,
+              features: { ...prevState.features, ...newFeatures }
+            }));
+          }
+        });
+        featureflow.on('UPDATED_FEATURE', (item: unknown) => {
+          console.log('UPDATED_FEATURE', item);
+          const newFeatures: EvaluatedFeatures = featureflow.getFeatures();
+          if (Object.keys(newFeatures).length > 0) {
+            setState((prevState) => ({
+              ...prevState,
+              features: { ...prevState.features, ...newFeatures }
+            }));
+          }
+        });
+      };
+
+      subscribeToChanges(featureflow);
     };
-  }
 
-  subscribeToChanges = (featureflow: FeatureflowClient) => {
-    featureflow.on('INIT', () => {
-      const newFeatures: EvaluatedFeatureSet = featureflow.getFeatures();
-      if (Object.keys(newFeatures).length > 0) {
-        this.setState(({features}) => ({features: { ...features, ...newFeatures}}));
-      }
-    });
-    featureflow.on('INIT', () => {
-      const newFeatures: EvaluatedFeatureSet = featureflow.getFeatures();
-      if (Object.keys(newFeatures).length > 0) {
-        this.setState(({features}) => ({features: { ...features, ...newFeatures}}));
-      }
-    });
-    featureflow.on('UPDATED_FEATURE', (item: any) => {
-      console.log('UPDATED_FEATURE', item);
-      const newFeatures: EvaluatedFeatureSet = featureflow.getFeatures();
-      if (Object.keys(newFeatures).length > 0) {
-        this.setState(({features}) => ({features: { ...features, ...newFeatures}}));
-      }
-    });
-  };
+    initialiseFeatureflow();
 
-  initialiseFeatureflow = async () => {
-    const { apiKey, config, user } = this.props;
+    return () => {
+      isMounted = false;
+    };
+  }, [apiKey, config, user]);
 
-    const featureflow = await createFeatureflowClient(apiKey, config, user);
-    this.setState({ features: featureflow.getFeatures(), featureflow });
-    this.subscribeToChanges(this.state.featureflow);
-  };
-
-  async componentDidMount() {
-    await this.initialiseFeatureflow();
-  }
-
-  render() {
-    return <Provider value={this.state}>{this.props.children}</Provider>;
-  }
-}
+  return <Provider value={state}>{children}</Provider>;
+};
 
 export default FeatureflowProvider;

@@ -1,45 +1,50 @@
-import {ReactNode} from "react";
+import type {ReactNode, ReactElement, Component} from "react";
+// Import SDK types for use in React-specific types
+import type {
+  FeatureflowUser,
+  Config,
+  EvaluatedFeatures,
+  Evaluate,
+  Features,
+  Feature,
+  UserAttributes
+} from 'featureflow-client';
 
-export interface Feature {
-  rules: Rules
-}
+// Re-export all SDK types directly from the SDK
+export type {
+  FeatureflowUser,
+  Config,
+  EvaluatedFeatures,
+  Evaluate,
+  Features,
+  Feature,
+  UserAttributes
+} from 'featureflow-client';
 
-export interface Rules {
-  audience?: Audience
-  variant: string
-}
-
-export type Audience = {
-  conditions: Conditions
-}
-
-export type Conditions = {
-  target: string
-  operator: string
-  values: any
-}
-
+// React-specific types that extend or wrap SDK types
 export interface FeatureflowClient {
-  on(event: string, callback: Function): any
-  off(event: string): any
-  getFeatures(): EvaluatedFeatureSet
+  on(event: string, callback: (...args: unknown[]) => void): void
+  off(event: string): void
+  getFeatures(): EvaluatedFeatures
   evaluate(feature: string): Evaluate
   goal(goalKey: string): void
   updateUser(user: FeatureflowUser): void
   hasReceivedInitialResponse(): boolean
 }
 
-export interface Evaluate {
-    value(): string
-    is(value: string): string
-    isOn(): boolean
-    isOff(): boolean
-}
-
 /**
  * Contains the configuration available to initialise and provide a featureflow client
  */
 export interface FeatureflowProviderConfig {
+  apiKey: string
+  config: Config,
+  user?: FeatureflowUser
+}
+
+/**
+ * Contains the configuration for a provider that takes an already-instantiated client
+ */
+export interface FeatureflowProviderWithClientConfig {
   config?: FeatureflowReactConfig
   /**
    * Your instantiated featureflow client.
@@ -49,92 +54,39 @@ export interface FeatureflowProviderConfig {
 }
 
 /**
- * Contains the configuration available to initialise and provide a featureflow client
- */
-export interface AsyncFeatureflowProviderConfig {
-  apiKey: string
-  config: FeatureflowClientConfig,
-  user?: FeatureflowUser
-}
-
-/**
  * A set of pre-evaluated feature evaluate objects
  */
 export interface EvaluateSet {
   [key: string]: Evaluate
 }
 
-/**
- * A set of partially evaluated features
- */
-export interface FeatureSet {
-  [key: string]: Feature
-}
-
-/**
- * A set of partially evaluated features
- */
-export interface EvaluatedFeatureSet {
-  [key: string]: string
-}
-
 export interface FeatureflowContext {
   config?: FeatureflowReactConfig
-  features: EvaluatedFeatureSet
+  features: EvaluatedFeatures
   featureflow: FeatureflowClient
 }
 
 /**
- * Configuration to be passed
- * to either the FeatureflowProvider
- * or the withFeatureflow HOC
- * Passing to the featureflowProvider sets the 'defaults' for each consumer
- * Setting in the withFeatureflow HOC overrides the defaults for the underlying component.
+ * Configuration to be passed to the FeatureflowProvider
+ * Passing to the FeatureflowProvider sets the 'defaults' for each consumer
  */
 export interface FeatureflowReactConfig {
   update?: boolean,
   waitForInit?: boolean,
-  preInitComponent?: JSX.Element
+  preInitComponent?: ReactElement
   children?: ReactNode
-}
-
-export interface FeatureflowInjectedProps {
-  features: FeatureSet
-  featureflow: FeatureflowClient
-}
-
-export interface UserAttributes<T = string | number | boolean> {
-  [key: string]: T | T[]
-}
-
-export interface FeatureflowUser {
-  id?: string
-  attributes: UserAttributes
-}
-
-export interface FeatureflowClientConfig {
-  rtmUrl?: string
-  baseUrl?: string
-  eventsUrl?: string
-  streaming?: boolean
-  useCookies?: boolean
-  offline?: boolean
-  defaultFeatures?: FeatureSet,
-  uniqueEvals?: boolean
 }
 
 export interface State {
   config: FeatureflowReactConfig
-  features: EvaluatedFeatureSet
+  features: EvaluatedFeatures
   featureflow: FeatureflowClient
 }
-
-
 
 /**
  * @ignore
  */
-export interface EnhancedComponent extends React.Component {
+export interface EnhancedComponent extends Component {
   subscribeToChanges(featureflow: FeatureflowClient): void;
   // tslint:disable-next-line:invalid-void
   componentDidMount(): Promise<void>;

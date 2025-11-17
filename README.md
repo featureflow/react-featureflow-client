@@ -8,15 +8,20 @@
 
 Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
-##Note
+## Note
+
 Version ^2.x.x uses the new react context API and therefore requires react > 16.3
 
 To use featureflow with versions of react below 16.3, please use the 1.x.x client.
 
 When using the 1.x client you will need to also include the core javascript api:
+
 ```bash
-$ npm install --save featureflow-client
+
+npm install --save featureflow-client
+
 ```
+
 Version 2.x.x includes the core javascript SDK so there is no need to install it in addition to `react-featureflow-client`.
 
 ## Installation
@@ -24,10 +29,12 @@ Version 2.x.x includes the core javascript SDK so there is no need to install it
 Using NPM
 
 ```sh
-$ npm install --save react-featureflow-client
+npm install --save react-featureflow-client
 
 ```
+
 ## Example
+
 There is an example in this repository. Add your JS Client Environment SDK Key to example/src/index.tsx
 
 ```const FF_KEY = 'sdk-js-env-yourkeyhere';```
@@ -40,19 +47,26 @@ yarn start
 ```
 
 ## Getting Started
+
 Getting started is simple:
 
-1. Wrap your application with a using the withFeatureflowProvider HOC - there should only be one provider - it should sit at your top level App component.
+Wrap your application with a using the withFeatureflowProvider - there should only be one provider - it should sit at your top level App component.
 
 If you have
+
 ```javascript
+
   ReactDOM.render(
-      <App feature="example-feature"/>,
+      <App/>,
     document.getElementById('root')
   );
+
 ```
+
 wrap `App` using `withFeatureflowProvider`:
+
 ```javascript
+
 import { withFeatureflowProvider, useFeatureflow, useFeatures } from 'react-featureflow-client'
 
 const FF_KEY = 'js-env-YOUR_KEY_HERE';
@@ -70,9 +84,10 @@ export default (withFeatureflowProvider({
 })(App))
 ```
 
-2. You then have access to the `featureflow` client and evaluated `features` using hooks:
+You then have access to the `featureflow` client and evaluated `features` using hooks:
 
 ```javascript
+
 import { useFeatureflow, useFeatures } from 'react-featureflow-client'
 
 const App: React.FC<Props> = () => {
@@ -94,10 +109,10 @@ const App: React.FC<Props> = () => {
     {Object.keys(features).map(key => <div>{key} : {features[key]}</div>)}
   </div>
 }
+
 ```
 
 The above method is the recommended method of integrating featureflow.
-
 
 If you have the featureflow client previously initialised from the javascript client, you can use the provider pattern, for example:
 
@@ -164,11 +179,14 @@ Again, ensure only 1 featureflow client is initialised in your application.
 ### API
 `react-featureflow-client` exposes 2 properties.
 ```javascript
+
 import {
   FeatureflowProvider,
   withFeatureflow
 } from 'react-featureflow-client';
+
 ```
+
 ####`<FeatureflowProvider client>`
 Connects your featureflow to your React application. Must only have one child.
 
@@ -194,8 +212,8 @@ Pass the featureflow client to a React Component's props.
 | `preInitComponent` | `ReactComponent` | `undefined` | Use this display another component when the featureflow rules haven't loaded and `waitForInit` is `true`  |
 
 
-
 ```javascript
+
 import { withFeatureflowProvider, useFeatureflow } from 'react-featureflow-client'
 
 // Feature flag key

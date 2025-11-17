@@ -1,18 +1,22 @@
-import {FeatureflowClient, FeatureflowClientConfig, FeatureflowUser} from './types'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Featureflow = require('featureflow-client') // until we convert to TS
+import type {FeatureflowClient, Config, FeatureflowUser} from './types'
+import Featureflow from 'featureflow-client'
 
-const createFeatureflowClient = (
+const createFeatureflowClient = async (
   apiKey: string,
-  featureflowConfig: FeatureflowClientConfig,
+  featureflowConfig: Config,
   user?: FeatureflowUser,
-): FeatureflowClient => {
-  const featureflow = Featureflow.init(
+): Promise<FeatureflowClient> => {
+  if (user) {
+    return Featureflow.init(
+      apiKey,
+      user,
+      featureflowConfig
+    )
+  }
+  return Featureflow.init(
     apiKey,
-    user,
     featureflowConfig
-  )
-  return featureflow;
+  )  
 }
 
 export default createFeatureflowClient

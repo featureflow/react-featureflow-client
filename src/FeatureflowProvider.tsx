@@ -2,10 +2,10 @@ import React  from 'react'
 import { Provider } from './context'
 import {
   FeatureflowReactConfig,
-  FeatureflowProviderConfig,
+  FeatureflowProviderWithClientConfig,
 } from './types'
 
-const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = (props) => {
+const FeatureflowProviderWithClient: React.FC<FeatureflowProviderWithClientConfig> = (props) => {
   const { client, children } = props
 
   const defaultConfig: FeatureflowReactConfig = {
@@ -26,4 +26,4 @@ const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = (props) => {
 
   return <Provider value={providerState}>{children}</Provider>
 }
-export default FeatureflowProvider
+export default FeatureflowProviderWithClient
