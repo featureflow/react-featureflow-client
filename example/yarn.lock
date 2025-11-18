@@ -9171,10 +9171,10 @@ react-error-overlay@^6.0.7:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.1.0.tgz#22b86256beb1c5856f08a9a228adb8121dd985f2"
   integrity sha512-SN/U6Ytxf1QGkw/9ve5Y+NxBbZM6Ht95tuXNMKs8EJyFa/Vy/+Co3stop3KBHARfn/giv+Lj1uUnTfOJ3moFEQ==
 
-react-featureflow-client@2.1.0-beta.3:
-  version "2.1.0-beta.3"
-  resolved "https://registry.yarnpkg.com/react-featureflow-client/-/react-featureflow-client-2.1.0-beta.3.tgz#e6c9dc9d79934467378907da86de9eb3154dd1e7"
-  integrity sha512-6Evy9ibQKgPHKyfj9mZZNr1v3jqK0hJZ0LV3FdpfapN0F8COSBaSvD5eftx4GtvyU8JV8GWjvOCExffVmTwe5g==
+react-featureflow-client@2.1.0-beta.5:
+  version "2.1.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-featureflow-client/-/react-featureflow-client-2.1.0-beta.5.tgz#1a59d76268b0b5fa1600b1a3c5ab489378b2b8a2"
+  integrity sha512-3VE8MxfsSMEy/7AOMNzHfCoBa+rAfy6hJBRqG6qPOm8gz/jMEBWEoKS5XRa9K7Kl/TBsfaU0Or7kRTqOMUSpTw==
   dependencies:
     featureflow-client "2.0.0-beta.6"
 
