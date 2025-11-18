@@ -11,11 +11,10 @@ import type {
 } from "./types";
 
 const FeatureflowProvider: React.FC<FeatureflowProviderConfig> = ({ apiKey, config, user, children }) => {
-  // Create a synchronous offline client for initial state
-  const offlineClient = new FeatureflowClientClass('offline', undefined, {
-    ...config || {},
-    offline: true,
-    delayInit: true
+  // Create a client for initial state
+  const offlineClient = new FeatureflowClientClass(apiKey, user, {
+    ...config || {}, 
+    ...{initOnCache: true},
   });
 
   const [state, setState] = useState<FeatureflowContext>({
