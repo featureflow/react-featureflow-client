@@ -1,35 +1,47 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react';
+import { useFeatureflow, useFeatures } from 'react-featureflow-client';
 
-import { useFeatureflow, useFeatures } from 'react-featureflow-client'
-import './index.css'
-
-type Props = {
-  feature: string
+interface Props {
+  feature: string;
 }
 
-const HooksExample: React.FC<Props> = (props) => {
+const HooksExample: React.FC<Props> = ({ feature }) => {
   const featureflow = useFeatureflow();
   const features = useFeatures();
-  const {feature} = props;
-  const [goal, setGoal] = useState(false);
-  if(!goal && featureflow.hasReceivedInitialResponse()){
-    featureflow.goal("hoc-page-viewed");
-    setGoal(true);
-  }
-  return <div>
-    <b>{feature}</b>
-    { featureflow.evaluate(feature).isOn() && [
-        <p key="1">{feature} is on</p>,
-    ]}
-    { featureflow.evaluate(feature).isOff() && [
-      <p key="1">{feature} is off</p>,
-      ]
+  const [goalTracked, setGoalTracked] = useState(false);
+
+  useEffect(() => {
+    if (!goalTracked && featureflow.hasReceivedInitialResponse()) {
+      featureflow.goal('hooks-page-viewed');
+      setGoalTracked(true);
     }
+  }, [featureflow, goalTracked]);
 
-    {Object.keys(features).map(key => <div key={key}>{key} : {features[key]}</div>)}
+  const evaluation = featureflow.evaluate(feature);
+  const isOn = evaluation.isOn();
+  const isOff = evaluation.isOff();
 
+  return (
+    <div style={{ padding: '16px', border: '1px solid #ddd', borderRadius: '4px' }}>
+      <h3>Feature: <code>{feature}</code></h3>
+      
+      <div style={{ marginTop: '12px' }}>
+        {isOn && <p style={{ color: 'green' }}>✓ {feature} is ON</p>}
+        {isOff && <p style={{ color: 'red' }}>✗ {feature} is OFF</p>}
+      </div>
 
-  </div>
-}
+      <div style={{ marginTop: '16px' }}>
+        <h4>All Features:</h4>
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {Object.keys(features).map(key => (
+            <li key={key} style={{ padding: '4px 0' }}>
+              <code>{key}</code>: {features[key]}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
 
-export default HooksExample
+export default HooksExample;

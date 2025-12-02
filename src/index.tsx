@@ -1,10 +1,19 @@
 import FeatureflowProvider from './FeatureflowProvider'
-import withFeatureflowProvider from './withFeatureflowProvider';
-import withAsyncFeatureflowProvider from './withAsyncFeatureflowProvider';
-import withFeatureflow from './withFeatureflow'
+import FeatureflowProviderWithClient from './FeatureflowProviderWithClient'
+import asyncFeatureflowProvider from './asyncFeatureflowProvider'
 import useFeatureflow from "./useFeatureflow";
 import useFeatures from "./useFeatures";
-import type { FeatureflowInjectedProps, FeatureflowUser, UserAttributes } from './types'
 
-export { withFeatureflowProvider, withAsyncFeatureflowProvider, FeatureflowProvider, withFeatureflow, useFeatureflow, useFeatures }
-export type { FeatureflowInjectedProps, FeatureflowUser, UserAttributes }
+export { FeatureflowProvider, FeatureflowProviderWithClient, asyncFeatureflowProvider, useFeatureflow, useFeatures }
+
+// Re-export SDK types for convenience (all re-exported from types.ts)
+export type {
+  FeatureflowUser,
+  UserAttributes,
+  Config,
+  EvaluatedFeatures,
+  Evaluate,
+  Features,
+  Feature,
+  FeatureflowClient
+} from './types'

@@ -31,6 +31,18 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <script>
+      // Polyfill for process (required by some dependencies in browser environments)
+      (function() {
+        if (typeof process === 'undefined') {
+          window.process = { env: {} };
+          // Also set as global for non-window contexts
+          if (typeof global !== 'undefined') {
+            global.process = window.process;
+          }
+        }
+      })();
+    </script>
 
     <div id="root"></div>
 
