@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { asyncFeatureflowProvider, FeatureflowProvider } from 'react-featureflow-client';
+import type { FeatureflowUser } from 'react-featureflow-client';
 import './index.css';
 import HooksExample from './HooksExample';
+import UserEditor from './UserEditor';
 
 const FF_KEY = 'js-env-bbb659960a3344c5a31681282c0c4bdf';
-const user = {
+const defaultUser: FeatureflowUser = {
   id: 'user-123',
   attributes: {
     tier: 'gold',
@@ -73,7 +75,7 @@ const ModeSelector: React.FC<{ currentMode: 'standard' | 'async' }> = ({ current
  * Main app content (same for both modes)
  */
 const AppContent: React.FC<{ mode: 'standard' | 'async' }> = ({ mode }) => (
-  <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+  <div style={{ padding: '20px', maxWidth: '900px', margin: '0 auto' }}>
     <h1>React Featureflow Client Example</h1>
     
     <ModeSelector currentMode={mode} />
@@ -95,12 +97,21 @@ const AppContent: React.FC<{ mode: 'standard' | 'async' }> = ({ mode }) => (
       </p>
     </div>
 
+    {/* User Editor Section */}
     <section style={{ marginBottom: '40px' }}>
-      <h2>Hooks Example</h2>
+      <h2>User Context Editor</h2>
+      <p>Update the user context to see how feature flags change based on user attributes.</p>
+      <UserEditor defaultUser={defaultUser} />
+    </section>
+
+    {/* Features Display Section */}
+    <section style={{ marginBottom: '40px' }}>
+      <h2>Feature Flags</h2>
       <p>This demonstrates using the <code>useFeatureflow</code> and <code>useFeatures</code> hooks.</p>
       <HooksExample feature="example-feature" />
     </section>
 
+    {/* Code Examples Section */}
     <section style={{ 
       padding: '16px', 
       background: '#f9f9f9', 
@@ -132,6 +143,19 @@ ReactDOM.render(
   document.getElementById('root')
 );`}
       </pre>
+
+      <p>
+        <strong>Update User:</strong> Change user context after initialization
+      </p>
+      <pre style={{ background: '#eee', padding: '12px', borderRadius: '4px', overflow: 'auto' }}>
+{`const featureflow = useFeatureflow();
+
+// Update user context (re-evaluates features)
+await featureflow.updateUser({
+  id: 'new-user-id',
+  attributes: { tier: 'premium', beta: true }
+});`}
+      </pre>
     </section>
   </div>
 );
@@ -148,7 +172,7 @@ const initApp = async () => {
       const AsyncProvider = await asyncFeatureflowProvider({
         apiKey: FF_KEY,
         config: { offline: false },
-        user: user
+        user: defaultUser
       });
 
       ReactDOM.render(
@@ -177,7 +201,7 @@ const initApp = async () => {
         <FeatureflowProvider
           apiKey={FF_KEY}
           config={{ offline: false }}
-          user={user}
+          user={defaultUser}
         >
           <AppContent mode="standard" />
         </FeatureflowProvider>

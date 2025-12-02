@@ -35,7 +35,7 @@ const HooksExample: React.FC<Props> = ({ feature }) => {
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {Object.keys(features).map(key => (
             <li key={key} style={{ padding: '4px 0' }}>
-              <code>{key}</code>: {features[key] ? 'ON' : 'OFF'}
+              <code>{key}</code>: {features[key]}
             </li>
           ))}
         </ul>
