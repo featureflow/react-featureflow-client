@@ -1,10 +1,6 @@
 # Featureflow React Example
 
-This simple example shows a typical react application (created with  [Create React App](https://github.com/facebook/create-react-app) ) using featureflow.
-
-It is linked to the react-featureflow-client package in the parent directory for development purposes.
-
-You can run `yarn install` and then `yarn start` to test this example.
+This example demonstrates both provider patterns in [react-featureflow-client](../).
 
 ## 🚀 Getting Started
 
@@ -20,34 +16,39 @@ You can run `yarn install` and then `yarn start` to test this example.
    yarn start
    ```
 
-This will run the example React app using the locally linked `react-featureflow-client` package.
+## ✨ Switching Between Provider Modes
 
----
+The example supports **two provider modes** that you can switch between using the buttons in the UI:
 
-## ✨ Configuration
+### Standard Provider Mode (default)
+- URL: `http://localhost:3000`
+- Uses `<FeatureflowProvider>` component
+- Client initializes in `useEffect` (after mount)
+- Simple setup, but may cause brief flicker as features load
 
-- Update your Featureflow SDK Key in [`src/App.tsx`](./src/App.tsx):
-
-  ```ts
-  const FF_KEY = 'js-env-<your-sdk-key-here>';
-  ```
-
-- Optionally, edit the `user` object to match your test user.
-
----
+### Async Provider Mode
+- URL: `http://localhost:3000/#async`
+- Uses `asyncFeatureflowProvider()` function
+- Client initializes **before** React renders
+- No flicker — features available immediately
+- Recommended for production apps
 
 ## 📂 Project Structure
 
-- `src/App.tsx` – Main entry with the `FeatureflowProvider` setup.
-- `src/HooksExample.tsx` – Example usage of the provided hooks.
+- `src/index.tsx` – Entry point with both provider modes and mode switching
+- `src/HooksExample.tsx` – Example usage of `useFeatureflow` and `useFeatures` hooks
 
----
+## ✨ Configuration
+
+Update your Featureflow SDK Key in [`src/index.tsx`](./src/index.tsx):
+
+```ts
+const FF_KEY = 'js-env-<your-sdk-key-here>';
+```
 
 ## 📝 Notes
 
-- This example uses [Create React App](https://github.com/facebook/create-react-app).
-- It links to your local version of `react-featureflow-client` for development.
+- This example uses [Create React App](https://github.com/facebook/create-react-app)
+- It links to your local version of `react-featureflow-client` for development
 
-For more details or advanced usage, see the [main README](../README.md).
-
-
+For more details, see the [main README](../README.md).

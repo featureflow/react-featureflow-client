@@ -12,7 +12,7 @@
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-featureflow-client": "2.1.0-beta.5",
+    "react-featureflow-client": "file:../dist/",
     "react-scripts": "3.4.4",
     "typescript": "^3.7.5"
   },
