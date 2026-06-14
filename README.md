@@ -2,265 +2,242 @@
 
 [![][npm-img]][npm-url]
 
-[![][dependency-img]][dependency-url]
-
 > Official React bindings for [Featureflow Javascript Client](https://github.com/featureflow/featureflow-javascript-sdk)
 
 Get your Featureflow account at [featureflow.io](http://www.featureflow.io)
 
-## Note
-
-Version ^2.x.x uses the new react context API and therefore requires react > 16.3
-
-To use featureflow with versions of react below 16.3, please use the 1.x.x client.
-
-When using the 1.x client you will need to also include the core javascript api:
-
-```bash
-
-npm install --save featureflow-client
-
-```
-
-Version 2.x.x includes the core javascript SDK so there is no need to install it in addition to `react-featureflow-client`.
-
 ## Installation
 
-Using NPM
-
-```sh
-npm install --save react-featureflow-client
-
+```bash
+npm install react-featureflow-client
 ```
 
-## Example
+## Quick Start
 
-There is an example in this repository. Add your JS Client Environment SDK Key to example/src/index.tsx
+### 1. Initialize the Provider (Recommended: Async)
 
-```const FF_KEY = 'sdk-js-env-yourkeyhere';```
+The `asyncFeatureflowProvider` initializes Featureflow **before** your app renders, ensuring features are available immediately with no flicker.
 
-And
-
-```sh
-cd example
-yarn start
-```
-
-## Getting Started
-
-Getting started is simple:
-
-Wrap your application with a using the withFeatureflowProvider - there should only be one provider - it should sit at your top level App component.
-
-If you have
-
-```javascript
-
-  ReactDOM.render(
-      <App/>,
-    document.getElementById('root')
-  );
-
-```
-
-wrap `App` using `withFeatureflowProvider`:
-
-```javascript
-
-import { withFeatureflowProvider, useFeatureflow, useFeatures } from 'react-featureflow-client'
+```tsx
+// index.tsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { asyncFeatureflowProvider } from 'react-featureflow-client';
+import App from './App';
 
 const FF_KEY = 'js-env-YOUR_KEY_HERE';
 const user = {
+  id: 'user-123',
   attributes: {
     tier: 'gold',
-    country: 'australia',
-    roles: ['role1', 'role2']
+    country: 'australia'
   }
 };
 
-export default (withFeatureflowProvider({
-  apiKey: FF_KEY,
-  user
-})(App))
+const initApp = async () => {
+  const FeatureflowProvider = await asyncFeatureflowProvider({
+    apiKey: FF_KEY,
+    user
+  });
+
+  ReactDOM.render(
+    <FeatureflowProvider>
+      <App />
+    </FeatureflowProvider>,
+    document.getElementById('root')
+  );
+};
+
+initApp();
 ```
 
-You then have access to the `featureflow` client and evaluated `features` using hooks:
+### 2. Use Feature Flags in Components
 
-```javascript
+```tsx
+// App.tsx
+import React from 'react';
+import { useFeatureflow, useFeatures } from 'react-featureflow-client';
 
-import { useFeatureflow, useFeatures } from 'react-featureflow-client'
-
-const App: React.FC<Props> = () => {
-
+function App() {
   const featureflow = useFeatureflow();
   const features = useFeatures();
-  const feature = 'example-feature';
 
-  return  <div>
-    <h1>A very simple example</h1>
-    <b>{feature}</b>
-    { featureflow.evaluate(feature).isOn() && [
-        <p key="1">I am on</p>,
-    ]}
-    { featureflow.evaluate(feature).isOff() && [
-      <p key="1">I am off</p>,
-      ]
-    }
-    {Object.keys(features).map(key => <div>{key} : {features[key]}</div>)}
-  </div>
-}
-
-```
-
-The above method is the recommended method of integrating featureflow.
-
-If you have the featureflow client previously initialised from the javascript client, you can use the provider pattern, for example:
-
-```javascript
-
-import { useFeatureflow, FeatureflowProvider } from 'react-featureflow-client'
-import Featureflow from 'featureflow-client'
-import './App.css'
-
-// Feature flag key
-const FEATURE_KEY = 'bob2'
-
-// Component that will be shown when feature is ON
-const NewWelcomeMessage = () => (
-  <div className="welcome-message new">
-    <h1>Welcome to the Future!</h1>
-    <p>You're seeing our new, improved welcome message</p>
-  </div>
-)
-
-// Component that will be shown when feature is OFF
-const OldWelcomeMessage = () => (
-  <div className="welcome-message old">
-    <h1>Hello World!</h1>
-    <p>Welcome to React v19</p>
-  </div>
-)
-
-function App() {
-
-  const featureflow = useFeatureflow()
+  const isNewUIEnabled = featureflow.evaluate('new-ui').isOn();
 
   return (
-    <div className="app-container">
-      {featureflow.evaluate(FEATURE_KEY).isOn() ? <NewWelcomeMessage /> : <OldWelcomeMessage />}
+    <div>
+      {isNewUIEnabled ? <NewUI /> : <OldUI />}
+      
+      {/* Display all features */}
+      <ul>
+        {Object.entries(features).map(([key, value]) => (
+          <li key={key}>{key}: {value}</li>
+        ))}
+      </ul>
     </div>
-  )
+  );
 }
-
-const FF_KEY = 'sdk-js-env-YOUR_KEY_HERE'
-const user = {
-  id: 'test-user-1',
-  attributes: {
-    email: 'test@example.com',
-    plan: 'free'
-  }
-}
-
-const featureflow = Featureflow.init(FF_KEY, user);
-
-const AppWrapper = () => {
-  return (
-    <FeatureflowProvider client={featureflow}>
-      <App />
-    </FeatureflowProvider>
-  )
-}
-export default AppWrapper
-
 ```
 
-Again, ensure only 1 featureflow client is initialised in your application.
+## Provider Options
 
-### API
-`react-featureflow-client` exposes 2 properties.
-```javascript
+### `asyncFeatureflowProvider` (Recommended)
 
-import {
-  FeatureflowProvider,
-  withFeatureflow
+Initializes the client **before** React renders. No flicker, features available immediately.
+
+```tsx
+const FeatureflowProvider = await asyncFeatureflowProvider({
+  apiKey: 'js-env-YOUR_KEY',
+  user: { id: 'user-123', attributes: { plan: 'premium' } },
+  config: { offline: false }  // optional
+});
+```
+
+### `FeatureflowProvider` (Standard)
+
+Initializes the client **after** mount in `useEffect`. Simpler setup, but may cause brief flicker.
+
+```tsx
+import { FeatureflowProvider } from 'react-featureflow-client';
+
+<FeatureflowProvider
+  apiKey="js-env-YOUR_KEY"
+  user={{ id: 'user-123', attributes: { plan: 'premium' } }}
+  config={{ offline: false }}
+>
+  <App />
+</FeatureflowProvider>
+```
+
+### `FeatureflowProviderWithClient` (Bring Your Own Client)
+
+Use an existing Featureflow client instance:
+
+```tsx
+import Featureflow from 'featureflow-client';
+import { FeatureflowProviderWithClient } from 'react-featureflow-client';
+
+const client = await Featureflow.init('js-env-YOUR_KEY', user);
+
+<FeatureflowProviderWithClient client={client}>
+  <App />
+</FeatureflowProviderWithClient>
+```
+
+## Hooks
+
+### `useFeatureflow()`
+
+Returns the Featureflow client instance for evaluating features and tracking goals.
+
+```tsx
+const featureflow = useFeatureflow();
+
+// Evaluate a feature
+const isOn = featureflow.evaluate('my-feature').isOn();
+const variant = featureflow.evaluate('my-feature').value();
+
+// Check specific variant
+const isPremium = featureflow.evaluate('pricing-tier').is('premium');
+
+// Track a goal
+featureflow.goal('button-clicked');
+```
+
+### `useFeatures()`
+
+Returns all evaluated features as an object. Automatically updates when features change.
+
+```tsx
+const features = useFeatures();
+
+// features = { 'feature-a': 'on', 'feature-b': 'variant-1', ... }
+```
+
+## Updating User Context
+
+Update the user context at runtime to re-evaluate features (e.g., after login):
+
+```tsx
+const featureflow = useFeatureflow();
+
+// Update user and re-evaluate all features
+await featureflow.updateUser({
+  id: 'new-user-id',
+  attributes: {
+    tier: 'premium',
+    beta: true
+  }
+});
+```
+
+## TypeScript Support
+
+The package includes TypeScript definitions. Import types as needed:
+
+```tsx
+import type { 
+  FeatureflowUser, 
+  FeatureflowClient,
+  Config,
+  EvaluatedFeatures 
 } from 'react-featureflow-client';
-
 ```
 
-####`<FeatureflowProvider client>`
-Connects your featureflow to your React application. Must only have one child.
+## Example App
 
-| Params | Type | Default | Description |
-|---------------|----------|--------------|----------------------------------------------------------------|
-| `client*` | `featureflow` | **`Required`** | An instantiated featureflow client |
+Run the included example:
 
-####`withFeatureflow([mapFeatureListeners], [clientProp])(Component)`
-Pass the featureflow client to a React Component's props.
-
-| Params | Type | Default | Description |
-|---------------|----------|--------------|----------------------------------------------------------------|
-| `featureflowConfig` | `object` | `{}` | Use to set the `update` property and featureflow `clientName` specifically for the component. See `FeatureflowConfig`. |
-| `Component` | `Component` | **`Required`** | The component to pass the featureflow client to.  |
-
-
-#### `FeatureflowConfig`
-| Properties | Type | Default | Description |
-|---------------|----------|--------------|----------------------------------------------------------------|
-| `update` | `boolean` | `false` | If set to `true` then when features update from featureflow, the component will update automatically.  |
-| `clientName` | `string` | `"featureflow"` | Use this to change the prop that the featureflow client will bind to.  |
-| `waitForInit` | `boolean` | `false` | Use this to wait for featureflow to respond with features before the rendering the component   |
-| `preInitComponent` | `ReactComponent` | `undefined` | Use this display another component when the featureflow rules haven't loaded and `waitForInit` is `true`  |
-
-
-```javascript
-
-import { withFeatureflowProvider, useFeatureflow } from 'react-featureflow-client'
-
-// Feature flag key
-const FEATURE_KEY = 'my-feature';
-
-// Component that will be shown when feature is ON
-const NewWelcomeMessage = () => (
-  <div className="welcome-message new">
-    <h1>Welcome to the Future!</h1>
-    <p>You're seeing our new, improved welcome message</p>
-  </div>
-)
-
-// Component that will be shown when feature is OFF
-const OldWelcomeMessage = () => (
-  <div className="welcome-message old">
-    <h1>Hello World!</h1>
-    <p>Welcome to React v19</p>
-  </div>
-)
-
-function App() {
-  const featureflow = useFeatureflow()
-  const isOn = featureflow.evaluate(FEATURE_KEY).isOn()
-
-  return (
-    <div className="app-container">
-      {isOn ? <NewWelcomeMessage /> : <OldWelcomeMessage />}      
-    </div>
-  )
-}
-
-const FF_KEY = 'sdk-js-env-mykey'
-const user = {
-  id: 'test-user-1',
-  attributes: {
-    email: 'test@example.com',
-    plan: 'free'
-  }
-}
-
-export default withFeatureflowProvider({
-  apiKey: FF_KEY,
-  user
-})(App)
-
+```bash
+cd example
+yarn install
+yarn start
 ```
+
+The example demonstrates:
+- Switching between async and standard providers
+- Editing user context at runtime
+- Feature flag evaluation with hooks
+
+## API Reference
+
+### Exports
+
+| Export | Type | Description |
+|--------|------|-------------|
+| `asyncFeatureflowProvider` | Function | Async function returning a provider component |
+| `FeatureflowProvider` | Component | Standard provider component |
+| `FeatureflowProviderWithClient` | Component | Provider accepting an existing client |
+| `useFeatureflow` | Hook | Returns the Featureflow client |
+| `useFeatures` | Hook | Returns evaluated features object |
+
+### Provider Props
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `apiKey` | `string` | Yes | Your Featureflow JS environment SDK key |
+| `user` | `FeatureflowUser` | No | User context for targeting |
+| `config` | `Config` | No | Client configuration options |
+
+### FeatureflowUser
+
+```tsx
+interface FeatureflowUser {
+  id: string;
+  attributes?: {
+    [key: string]: string | number | boolean | string[];
+  };
+}
+```
+
+## Migration from v1.x
+
+Version 2.x uses the React Context API and requires React 16.3+.
+
+**Key changes:**
+- Use `asyncFeatureflowProvider` or `FeatureflowProvider` instead of `withFeatureflowProvider`
+- Use `useFeatureflow()` and `useFeatures()` hooks instead of HOCs
+- The `featureflow-client` SDK is now bundled (no separate install needed)
 
 ## License
 
@@ -268,6 +245,3 @@ Apache-2.0
 
 [npm-url]: https://nodei.co/npm/react-featureflow-client
 [npm-img]: https://nodei.co/npm/react-featureflow-client.png
-
-[dependency-url]: https://www.featureflow.io
-[dependency-img]: https://www.featureflow.io/wp-content/uploads/2016/12/featureflow-web.png
