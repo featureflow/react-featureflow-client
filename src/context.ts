@@ -1,9 +1,11 @@
 import { createContext } from 'react'
-import type {Config, FeatureflowContext } from './types'
+import type { Config, FeatureflowContext } from './types'
 import Featureflow, { FeatureflowClient } from 'featureflow-client'
 
-export const offlineFeatureflow = async (config?: Config): Promise<FeatureflowClient> => {
-  return Featureflow.init('offline', {...config, offline: true});
+export const offlineFeatureflow = async (
+  config?: Config
+): Promise<FeatureflowClient> => {
+  return Featureflow.init('offline', { ...config, offline: true })
 }
 
 // Create a synchronous offline client for context default using delayInit
@@ -11,7 +13,11 @@ export const offlineFeatureflow = async (config?: Config): Promise<FeatureflowCl
 const createSyncOfflineClient = (config?: Config): FeatureflowClient => {
   // For offline mode, we can instantiate the client directly with delayInit
   // The client will be initialized when needed (e.g., when initialise() is called)
-  return new FeatureflowClient('offline', undefined, {...config, offline: true, delayInit: true});
+  return new FeatureflowClient('offline', undefined, {
+    ...config,
+    offline: true,
+    delayInit: true
+  })
 }
 
 const context = createContext<FeatureflowContext>({

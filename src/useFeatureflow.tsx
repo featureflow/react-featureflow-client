@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import context from "./context";
+import { useContext } from 'react'
+import context from './context'
 
 const useFeatureflow = () => {
-  const { featureflow } = useContext(context);
+  const { featureflow } = useContext(context)
 
-  return featureflow;
-};
+  return featureflow
+}
 
-export default useFeatureflow;
+export default useFeatureflow

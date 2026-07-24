@@ -1,0 +1,58 @@
+name: Publish
+
+# Pushing a v* tag publishes to npm (dist-tag from the package.json version). Mirrors
+# featureflow-javascript-sdk/publish.yml minus the CDN deploy (npm only); the npm trusted
+# publisher for react-featureflow-client is configured against this workflow filename.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  id-token: write # OIDC token for npm trusted publishing
+
+jobs:
+  publish:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # The build/test toolchain (react-scripts 3, microbundle-crl) requires Node 16 (.nvmrc).
+      - name: Setup Node.js for build
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests, lint and build
+        run: npm test
+
+      # Trusted publishing (OIDC) needs npm >= 11.5.1, which needs a newer Node than the
+      # build toolchain supports — switch Node for the publish step only. dist/ was built
+      # above on Node 16; --ignore-scripts stops `prepare` rebuilding it on the wrong Node.
+      - name: Setup Node.js for publish
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Publish to NPM
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+            TAG="${BASH_REMATCH[1]}"
+            echo "Publishing $VERSION with dist-tag $TAG"
+            npm publish --tag "$TAG" --ignore-scripts
+          else
+            echo "Publishing $VERSION as latest"
+            npm publish --ignore-scripts
+          fi

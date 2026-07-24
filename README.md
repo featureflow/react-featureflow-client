@@ -139,9 +139,6 @@ const variant = featureflow.evaluate('my-feature').value();
 
 // Check specific variant
 const isPremium = featureflow.evaluate('pricing-tier').is('premium');
-
-// Track a goal
-featureflow.goal('button-clicked');
 ```
 
 ### `useFeatures()`
@@ -152,6 +149,43 @@ Returns all evaluated features as an object. Automatically updates when features
 const features = useFeatures();
 
 // features = { 'feature-a': 'on', 'feature-b': 'variant-1', ... }
+```
+
+### `useFeature(key)`
+
+Evaluates a single feature and returns the full `Evaluate` object
+(`value()`/`is()`/`isOn()`/`isOff()`/`jsonValue()`). Re-evaluates automatically when
+features update.
+
+```tsx
+const feature = useFeature('my-feature');
+
+if (feature.isOn()) {
+  // ...
+}
+```
+
+### `useJsonValue(key)`
+
+Returns the evaluated variant's JSON config payload directly, or `undefined` if the
+variant has none.
+
+```tsx
+const config = useJsonValue<{ color: string }>('my-feature');
+```
+
+### `useTrack()`
+
+Returns a stable function for tracking goal events for the current user. The optional
+`details` argument is a number (the metric value) or an object whose optional `value` is
+the metric value and whose remaining properties are sent as custom data.
+
+```tsx
+const track = useTrack();
+
+track('button-clicked');
+track('purchase', 49.95);
+track('purchase', { value: 49.95, plan: 'pro' });
 ```
 
 ## Updating User Context
