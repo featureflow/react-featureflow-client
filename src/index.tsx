@@ -18,6 +18,14 @@ export {
   useTrack
 }
 
+// Analytics integrations: pass through config, e.g.
+// { integrations: [amplitudeIntegration(amplitude)] }
+export { amplitudeIntegration } from 'featureflow-client'
+export type {
+  AmplitudeLike,
+  AmplitudeIntegrationOptions
+} from 'featureflow-client'
+
 // Re-export SDK types for convenience (all re-exported from types.ts)
 export type {
   FeatureflowUser,
@@ -28,5 +36,7 @@ export type {
   Features,
   Feature,
   GoalDetails,
-  FeatureflowClient
+  FeatureflowClient,
+  EvaluationDetails,
+  EvaluationListener
 } from './types'

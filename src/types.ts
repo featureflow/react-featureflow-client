@@ -17,7 +17,9 @@ export type {
   Feature,
   UserAttributes,
   GoalDetails,
-  FeatureflowClient
+  FeatureflowClient,
+  EvaluationDetails,
+  EvaluationListener
 } from 'featureflow-client'
 
 /**
