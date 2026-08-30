@@ -19,9 +19,13 @@ export {
 }
 
 // Analytics integrations: pass through config, e.g.
-// { integrations: [amplitudeIntegration(amplitude)] }
-export { amplitudeIntegration } from 'featureflow-client'
+// { integrations: [amplitudeIntegration(amplitude)] } or
+// { integrations: [exposureIntegration(({ key, variant }) => mixpanel.track(...))] }
+export { exposureIntegration, amplitudeIntegration } from 'featureflow-client'
 export type {
+  ExposureSender,
+  ExposureIntegrationOptions,
+  FlagFilter,
   AmplitudeLike,
   AmplitudeIntegrationOptions
 } from 'featureflow-client'
