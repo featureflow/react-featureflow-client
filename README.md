@@ -25,7 +25,7 @@ import ReactDOM from 'react-dom';
 import { asyncFeatureflowProvider } from 'react-featureflow-client';
 import App from './App';
 
-const FF_KEY = 'js-env-YOUR_KEY_HERE';
+const FF_KEY = 'sdk-js-env-YOUR_KEY_HERE';
 const user = {
   id: 'user-123',
   attributes: {
@@ -51,33 +51,33 @@ const initApp = async () => {
 initApp();
 ```
 
-### 2. Use Feature Flags in Components
+### 2. Read a Flag with `useFeature`
+
+`useFeature(key)` evaluates one feature and re-renders the component whenever it changes:
 
 ```tsx
 // App.tsx
 import React from 'react';
-import { useFeatureflow, useFeatures } from 'react-featureflow-client';
+import { useFeature } from 'react-featureflow-client';
 
 function App() {
-  const featureflow = useFeatureflow();
-  const features = useFeatures();
+  const newUI = useFeature('new-ui');
 
-  const isNewUIEnabled = featureflow.evaluate('new-ui').isOn();
-
-  return (
-    <div>
-      {isNewUIEnabled ? <NewUI /> : <OldUI />}
-      
-      {/* Display all features */}
-      <ul>
-        {Object.entries(features).map(([key, value]) => (
-          <li key={key}>{key}: {value}</li>
-        ))}
-      </ul>
-    </div>
-  );
+  return newUI.isOn() ? <NewUI /> : <OldUI />;
 }
 ```
+
+Multivariate flags use `is(variant)` or `value()`:
+
+```tsx
+const pricing = useFeature('pricing-layout');
+
+if (pricing.is('compact')) return <CompactPricing />;
+```
+
+> **Prefer `useFeature` in render.** `useFeatureflow().evaluate(key)` reads the value once and
+> will not re-render when the flag changes. Use the client directly only for imperative work
+> such as `updateUser`. Likewise, do not copy a flag value into `useState`.
 
 ## Provider Options
 
@@ -87,7 +87,7 @@ Initializes the client **before** React renders. No flicker, features available 
 
 ```tsx
 const FeatureflowProvider = await asyncFeatureflowProvider({
-  apiKey: 'js-env-YOUR_KEY',
+  apiKey: 'sdk-js-env-YOUR_KEY',
   user: { id: 'user-123', attributes: { plan: 'premium' } },
   config: { offline: false }  // optional
 });
@@ -101,7 +101,7 @@ Initializes the client **after** mount in `useEffect`. Simpler setup, but may ca
 import { FeatureflowProvider } from 'react-featureflow-client';
 
 <FeatureflowProvider
-  apiKey="js-env-YOUR_KEY"
+  apiKey="sdk-js-env-YOUR_KEY"
   user={{ id: 'user-123', attributes: { plan: 'premium' } }}
   config={{ offline: false }}
 >
@@ -117,7 +117,7 @@ Use an existing Featureflow client instance:
 import Featureflow from 'featureflow-client';
 import { FeatureflowProviderWithClient } from 'react-featureflow-client';
 
-const client = await Featureflow.init('js-env-YOUR_KEY', user);
+const client = await Featureflow.init('sdk-js-env-YOUR_KEY', user);
 
 <FeatureflowProviderWithClient client={client}>
   <App />
@@ -126,19 +126,20 @@ const client = await Featureflow.init('js-env-YOUR_KEY', user);
 
 ## Hooks
 
-### `useFeatureflow()`
+### `useFeature(key)`
 
-Returns the Featureflow client instance for evaluating features and tracking goals.
+The hook to reach for. Evaluates a single feature and returns the full `Evaluate` object
+(`value()`/`is()`/`isOn()`/`isOff()`/`jsonValue()`). Re-evaluates automatically when
+features update, including after `updateUser`.
 
 ```tsx
-const featureflow = useFeatureflow();
+const feature = useFeature('my-feature');
 
-// Evaluate a feature
-const isOn = featureflow.evaluate('my-feature').isOn();
-const variant = featureflow.evaluate('my-feature').value();
+if (feature.isOn()) {
+  // ...
+}
 
-// Check specific variant
-const isPremium = featureflow.evaluate('pricing-tier').is('premium');
+const isPremium = useFeature('pricing-tier').is('premium');
 ```
 
 ### `useFeatures()`
@@ -151,19 +152,18 @@ const features = useFeatures();
 // features = { 'feature-a': 'on', 'feature-b': 'variant-1', ... }
 ```
 
-### `useFeature(key)`
+### `useFeatureflow()`
 
-Evaluates a single feature and returns the full `Evaluate` object
-(`value()`/`is()`/`isOn()`/`isOff()`/`jsonValue()`). Re-evaluates automatically when
-features update.
+Returns the Featureflow client instance, for imperative work such as `updateUser`.
 
 ```tsx
-const feature = useFeature('my-feature');
+const featureflow = useFeatureflow();
 
-if (feature.isOn()) {
-  // ...
-}
+await featureflow.updateUser({ id: 'user-123', attributes: { tier: 'gold' } });
 ```
+
+Calling `featureflow.evaluate(key)` from here works but reads the value once; it does not
+subscribe the component to updates. Use `useFeature` for anything rendered.
 
 ### `useJsonValue(key)`
 
@@ -231,7 +231,7 @@ yarn start
 The example demonstrates:
 - Switching between async and standard providers
 - Editing user context at runtime
-- Feature flag evaluation with hooks
+- Feature flag evaluation with the `useFeature` and `useFeatures` hooks
 
 ## API Reference
 
@@ -242,8 +242,11 @@ The example demonstrates:
 | `asyncFeatureflowProvider` | Function | Async function returning a provider component |
 | `FeatureflowProvider` | Component | Standard provider component |
 | `FeatureflowProviderWithClient` | Component | Provider accepting an existing client |
-| `useFeatureflow` | Hook | Returns the Featureflow client |
+| `useFeature` | Hook | Evaluates one feature; re-renders on change |
 | `useFeatures` | Hook | Returns evaluated features object |
+| `useFeatureflow` | Hook | Returns the Featureflow client |
+| `useJsonValue` | Hook | Returns a variant's JSON config payload |
+| `useTrack` | Hook | Returns a stable goal-tracking function |
 
 ### Provider Props
 
@@ -270,7 +273,7 @@ Version 2.x uses the React Context API and requires React 16.3+.
 
 **Key changes:**
 - Use `asyncFeatureflowProvider` or `FeatureflowProvider` instead of `withFeatureflowProvider`
-- Use `useFeatureflow()` and `useFeatures()` hooks instead of HOCs
+- Use the `useFeature()`, `useFeatures()` and `useFeatureflow()` hooks instead of HOCs
 - The `featureflow-client` SDK is now bundled (no separate install needed)
 
 ## License

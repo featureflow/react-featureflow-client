@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useFeatureflow, useFeatures } from 'react-featureflow-client';
+import { useFeature, useFeatureflow, useFeatures } from 'react-featureflow-client';
 
 interface Props {
   feature: string;
 }
 
 const HooksExample: React.FC<Props> = ({ feature }) => {
+  // useFeature subscribes this component to the flag: it re-renders when the flag or the
+  // user changes. The client from useFeatureflow is only needed for imperative calls.
+  const evaluation = useFeature(feature);
   const featureflow = useFeatureflow();
   const features = useFeatures();
   const [goalTracked, setGoalTracked] = useState(false);
@@ -17,7 +20,6 @@ const HooksExample: React.FC<Props> = ({ feature }) => {
     }
   }, [featureflow, goalTracked]);
 
-  const evaluation = featureflow.evaluate(feature);
   const isOn = evaluation.isOn();
   const isOff = evaluation.isOff();
 

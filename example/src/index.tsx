@@ -107,7 +107,7 @@ const AppContent: React.FC<{ mode: 'standard' | 'async' }> = ({ mode }) => (
     {/* Features Display Section */}
     <section style={{ marginBottom: '40px' }}>
       <h2>Feature Flags</h2>
-      <p>This demonstrates using the <code>useFeatureflow</code> and <code>useFeatures</code> hooks.</p>
+      <p>This demonstrates using the <code>useFeature</code> hook to read one flag, and <code>useFeatures</code> to list them all.</p>
       <HooksExample feature="example-feature" />
     </section>
 
@@ -142,6 +142,15 @@ ReactDOM.render(
   <Provider><App /></Provider>,
   document.getElementById('root')
 );`}
+      </pre>
+
+      <p>
+        <strong>Read a flag:</strong> <code>useFeature</code> re-renders the component when the flag changes
+      </p>
+      <pre style={{ background: '#eee', padding: '12px', borderRadius: '4px', overflow: 'auto' }}>
+{`const newCheckout = useFeature('new-checkout');
+
+return newCheckout.isOn() ? <NewCheckout /> : <LegacyCheckout />;`}
       </pre>
 
       <p>
